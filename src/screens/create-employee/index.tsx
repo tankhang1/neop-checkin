@@ -8,8 +8,18 @@ import { FONTS } from '@/utils/theme/fonts';
 import { mvs, vs } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { StackActions } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  InteractionManager,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const CreateEmployeeScreen = () => {
   // FORM
@@ -20,7 +30,11 @@ const CreateEmployeeScreen = () => {
     //reValidateMode: 'onSubmit',
   });
   // METHOD
-  const onSubmit = async (data: CreateEmployeeInput) => {};
+  const onSubmit = async (data: CreateEmployeeInput) => {
+    InteractionManager.runAfterInteractions(() => {
+      navigationRef.dispatch(StackActions.replace('Checkin'));
+    });
+  };
 
   return (
     <AppContainer isScroll={false}>

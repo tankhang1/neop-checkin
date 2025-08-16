@@ -14,6 +14,8 @@ import EMPLOYEE from '@/assets/icons/bottom-navigation/employee.svg';
 import QR_CODE_ACTIVE from '@/assets/icons/bottom-navigation/qr-code-active.svg';
 import QR_CODE from '@/assets/icons/bottom-navigation/qr-code.svg';
 
+import CLOCK from '@/assets/icons/core/clock.svg';
+import LOGOUT from '@/assets/icons/core/log-out.svg';
 import MAP_PIN from '@/assets/icons/core/map-pin.svg';
 
 export const ICONS = {
@@ -26,6 +28,8 @@ export const ICONS = {
     MAP_PIN,
     PIN_LOCATION: PIN_LOCATION,
     X,
+    LOGOUT,
+    CLOCK,
   },
   SOCIAL_LOGIN: {
     GOOGLE,

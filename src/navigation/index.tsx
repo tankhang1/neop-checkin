@@ -26,11 +26,11 @@ const AppNavigation = () => {
           gestureEnabled: true,
           gestureDirection: 'horizontal',
         }}>
+        <Stack.Screen name='Auth' component={AuthScreen} />
         <Stack.Screen name='Checkin' component={CheckinScreen} />
         <Stack.Screen name='QrDisplay' component={QrDisplayScreen} />
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} options={{ presentation: 'modal' }} />
-        <Stack.Screen name='Auth' component={AuthScreen} />
 
         <Stack.Screen name='CreateEmployee' component={CreateEmployeeScreen} options={{ presentation: 'modal' }} />
         <Stack.Screen
