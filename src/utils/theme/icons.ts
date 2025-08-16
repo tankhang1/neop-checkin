@@ -24,7 +24,13 @@ import EMPLOYEE from '@/assets/icons/bottom-navigation/employee.svg';
 import QR_CODE_ACTIVE from '@/assets/icons/bottom-navigation/qr-code-active.svg';
 import QR_CODE from '@/assets/icons/bottom-navigation/qr-code.svg';
 
+import CLOCK from '@/assets/icons/core/clock.svg';
+import LOGOUT from '@/assets/icons/core/log-out.svg';
 import MAP_PIN from '@/assets/icons/core/map-pin.svg';
+
+import CAMERA from '@/assets/icons/core/camera.svg';
+
+import CLOCK_RIGHT from '@/assets/icons/core/clock-right.svg';
 
 export const ICONS = {
   LOGO: {
@@ -36,6 +42,10 @@ export const ICONS = {
     MAP_PIN,
     PIN_LOCATION: PIN_LOCATION,
     X,
+    LOGOUT,
+    CLOCK,
+    CAMERA,
+    CLOCK_RIGHT,
     ADD_WORKPLACE,
     SEARCH,
     ADD_EMPLOYEE,
