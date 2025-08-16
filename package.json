@@ -19,6 +19,7 @@
     "react": "19.0.0",
     "react-hook-form": "^7.62.0",
     "react-native": "0.79.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-mmkv": "^3.3.0",
     "react-native-portalize": "^1.0.7",
     "react-native-reanimated": "^4.0.2",
