@@ -6,13 +6,12 @@ import rootReducer from '../reducer';
 const persistRootConfig = {
   key: 'root',
   storage: mmkvStorage,
-  whitelist: ['yourReducerName'], // Add the names of the reducers you want to persist
 };
 const persistedReducer = persistReducer(persistRootConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check if needed
     }),

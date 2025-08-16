@@ -1,7 +1,9 @@
+import AddEmployeeToWorkplaceScreen from '@/screens/add-employee-to-workplace';
 import AuthScreen from '@/screens/auth';
 import CheckinScreen from '@/screens/checkin';
 import CreateEmployeeScreen from '@/screens/create-employee';
 import CreateWorkplaceScreen from '@/screens/create-workplace';
+import InvitationQrCodeScreen from '@/screens/invitation-qrcode';
 import LocationScreen from '@/screens/location';
 import LoginScreen from '@/screens/login/LoginScreen';
 import QrDisplayScreen from '@/screens/qr-display';
@@ -42,6 +44,20 @@ const AppNavigation = () => {
         <Stack.Screen
           name='CreateWorkplace'
           component={CreateWorkplaceScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name='AddEmployeeToWorkplace'
+          component={AddEmployeeToWorkplaceScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name='InvitationQrCode'
+          component={InvitationQrCodeScreen}
           options={{
             presentation: 'modal',
           }}

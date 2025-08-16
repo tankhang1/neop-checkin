@@ -10,14 +10,18 @@ type TAppNavigation = {
   Auth: undefined;
   Checkin: undefined;
   CreateEmployee: undefined;
+  AddEmployeeToWorkplace: undefined;
   CreateWorkplace: undefined;
+  EmployeeDetail: undefined;
   Location: undefined;
   QrDisplay: undefined;
   QrGenerate: undefined;
+  InvitationQrCode: undefined;
   Main: NavigatorScreenParams<TBottomNavigation>;
 };
 type TBottomNavigation = {
   Employee: undefined;
+  EmployeeDetail: undefined;
   Account: undefined;
   QRCode: undefined;
 };
