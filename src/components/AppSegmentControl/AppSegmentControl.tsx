@@ -1,7 +1,7 @@
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { s, vs, width } from '@/utils/theme/responsive';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
@@ -15,7 +15,6 @@ type AppSegmentControlProps = {
   options: AppSegmentControlOption[];
   selectedOption?: string;
   onChange?: (option: string) => void;
-  isScrollable?: boolean;
 };
 
 type OptionLayout = {
@@ -23,11 +22,9 @@ type OptionLayout = {
   width: number;
 };
 
-const AppSegmentControl = ({ style, options, selectedOption, onChange, isScrollable = false }: AppSegmentControlProps) => {
+const AppSegmentControl = ({ style, options, selectedOption, onChange }: AppSegmentControlProps) => {
   const length = useMemo(() => options?.length || 1, [options?.length]);
   const defaultWidth = useMemo(() => (width - s(20 * 2)) / length, [length]);
-
-  const [layouts, setLayouts] = useState<OptionLayout[]>([]);
 
   const translateX = useSharedValue(0);
   const highlightWidth = useSharedValue(defaultWidth);
@@ -39,23 +36,13 @@ const AppSegmentControl = ({ style, options, selectedOption, onChange, isScrolla
 
   const handlePress = (item: AppSegmentControlOption, index: number) => {
     onChange?.(item.key);
-    if (isScrollable && layouts[index]) {
-      const { x, width } = layouts[index];
-      translateX.value = withTiming(x, { duration: 300 });
-      highlightWidth.value = withTiming(width, { duration: 300 });
-    } else {
-      translateX.value = withTiming(index * defaultWidth, { duration: 300 });
-      highlightWidth.value = withTiming(defaultWidth, { duration: 300 });
-    }
+    translateX.value = withTiming(index * defaultWidth, { duration: 300 });
+    highlightWidth.value = withTiming(defaultWidth, { duration: 300 });
   };
 
   const renderOptions = () =>
     options.map((item, index) => (
-      <TouchableOpacity
-        key={item.key}
-        onPress={() => handlePress(item, index)}
-        style={[styles.option, isScrollable && styles.scrollOption]}
-        activeOpacity={0.7}>
+      <TouchableOpacity key={item.key} onPress={() => handlePress(item, index)} style={[styles.option]} activeOpacity={0.7}>
         <Text style={item.key === selectedOption ? styles.selectedTitle : styles.optionTitle}>{item.label}</Text>
       </TouchableOpacity>
     ));

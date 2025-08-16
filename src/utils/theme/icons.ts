@@ -13,6 +13,9 @@ import EMPLOYEE_ACTIVE from '@/assets/icons/bottom-navigation/employee-active.sv
 import EMPLOYEE from '@/assets/icons/bottom-navigation/employee.svg';
 import QR_CODE_ACTIVE from '@/assets/icons/bottom-navigation/qr-code-active.svg';
 import QR_CODE from '@/assets/icons/bottom-navigation/qr-code.svg';
+
+import MAP_PIN from '@/assets/icons/core/map-pin.svg';
+
 export const ICONS = {
   LOGO: {
     MD: LOGO_MD,
@@ -20,6 +23,7 @@ export const ICONS = {
   CORE: {
     CHECK: CHECK,
     CHERVON_LEFT: CHERVON_LEFT,
+    MAP_PIN,
     PIN_LOCATION: PIN_LOCATION,
     X,
   },

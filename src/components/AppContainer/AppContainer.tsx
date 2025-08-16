@@ -1,18 +1,25 @@
 import { COLORS } from '@/utils/theme/colors';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type AppContainerProps = {
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
+  withSafeArea?: boolean;
 };
 
-const AppContainer = ({ style, children }: AppContainerProps) => {
+const AppContainer = ({ style, children, withSafeArea = true }: AppContainerProps) => {
   return (
-    <KeyboardAvoidingView style={[styles.container, style]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white[1] }}>{children}</SafeAreaView>
-    </KeyboardAvoidingView>
+    <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={[styles.container, style]}>
+      {withSafeArea ? (
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white[1] }}>{children}</SafeAreaView>
+      ) : (
+        <>{children}</>
+      )}
+    </KeyboardAwareScrollView>
   );
 };
 
