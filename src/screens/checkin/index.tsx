@@ -87,11 +87,16 @@ const CheckinScreen = () => {
                     value={brandName}
                     onChangeText={setBrandName}
                   />
-                  <AppButton label='Start' onPress={() => {}} disable={!brandName} />
+                  <AppButton label='Start' disable={!brandName} />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(44) }]}>
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan your Invitation QRcode</Text>
-                  <AppButton label='Scan' onPress={() => {}} />
+                  <AppButton
+                    label='Scan'
+                    onPress={() => {
+                      navigationRef.navigate('CreateEmployee');
+                    }}
+                  />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(32), gap: vs(20) }]}>
                   <AppButton
