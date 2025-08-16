@@ -1,89 +1,55 @@
 import AppButton from '@/components/AppButton/AppButton';
-import AppContainer from '@/components/AppContainer/AppContainer';
-import AppDivider from '@/components/AppDivider/AppDivider';
-import AppSegmentControl from '@/components/AppSegmentControl/AppSegmentControl';
 import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
-import { height, s, vs, width } from '@/utils/theme/responsive';
+import { IMAGES } from '@/utils/theme/images';
+import { s, vs } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
-import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
-enum OPTION_ENUM {
-  ADMIN = 'ADMIN',
-  EMPLOYEE = 'EMPLOYEE',
-  QR_DISPLAY = 'QR_DISPLAY',
-}
-const options = [
-  {
-    label: 'Admin',
-    key: OPTION_ENUM.ADMIN,
-  },
-  {
-    label: 'Employee',
-    key: OPTION_ENUM.EMPLOYEE,
-  },
-  {
-    label: 'QR Display',
-    key: OPTION_ENUM.QR_DISPLAY,
-  },
-];
 const QrDisplayScreen = () => {
-  // STATE
-  const [selectedOption, setSelectedOption] = useState(OPTION_ENUM.QR_DISPLAY);
-  const onNavEmployee = () => {
-    navigationRef.navigate('Main', { screen: 'Employee' });
-  };
   return (
-    <AppContainer>
-      <ScrollView horizontal style={{ height: height * 0.4 }}>
-        <View style={styles.imageCont}>
-          <Image />
-        </View>
-      </ScrollView>
-      <ScrollView showsVerticalScrollIndicator={false} style={{ height: height * 0.6 }}>
-        <View style={styles.container}>
-          <View style={styles.logoCont}>
-            <ICONS.LOGO.MD />
-          </View>
-          <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan to display Check In QRcode</Text>
-          <AppButton onPress={onNavEmployee} label='Scan' buttonContainerStyle={{ marginVertical: vs(32) }} />
-          <View style={styles.middleButtonCont}>
-            <AppDivider variant='horizontal' style={{ flex: 1 }} />
-            <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>You are</Text>
-            <AppDivider variant='horizontal' style={{ flex: 1 }} />
-          </View>
-          <AppSegmentControl
-            selectedOption={selectedOption}
-            options={options}
-            onChange={(val) => setSelectedOption(val as OPTION_ENUM)}
-          />
-        </View>
-      </ScrollView>
-    </AppContainer>
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <ICONS.CORE.MAP_PIN />
+        <Text style={{ ...FONTS.R17, color: COLORS.blue[1], marginTop: vs(12), marginBottom: vs(16) }}>
+          966 Glen Ellyn, Illinois 60137, USA
+        </Text>
+        <Text style={{ ...FONTS.M19, color: COLORS.blue[1] }}>Workplace</Text>
+        <Image source={IMAGES.CORE.QR_CODE} style={{ width: s(240), height: s(240) }} />
+      </View>
+      <View style={styles.buttonCont}>
+        <AppButton
+          buttonStyle={styles.button}
+          label='Cancel'
+          labelStyle={{ color: COLORS.blue[5] }}
+          onPress={() => navigationRef.goBack()}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
+    backgroundColor: COLORS.white[1],
+  },
+  container: {
+    flex: 1, // take remaining height above button
     paddingHorizontal: THEME.PADDING_HORIZONTAL,
-  },
-  logoCont: {
-    marginVertical: vs(60),
-    alignItems: 'center',
     justifyContent: 'center',
-  },
-  middleButtonCont: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: s(23),
-    marginBottom: vs(32),
   },
-  imageCont: {
-    width: width,
+  button: {
+    backgroundColor: COLORS.white[1],
+    borderColor: COLORS.blue[5],
+    borderWidth: 1,
+  },
+  buttonCont: {
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
+    paddingBottom: vs(58),
   },
 });
 export default QrDisplayScreen;

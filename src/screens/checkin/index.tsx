@@ -3,6 +3,7 @@ import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDivider from '@/components/AppDivider/AppDivider';
 import AppSegmentControl from '@/components/AppSegmentControl/AppSegmentControl';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
+import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -93,7 +94,12 @@ const CheckinScreen = () => {
                   <AppButton label='Scan' onPress={() => {}} />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(32), gap: vs(20) }]}>
-                  <AppButton label='Scan' />
+                  <AppButton
+                    label='Scan'
+                    onPress={() => {
+                      navigationRef.navigate('QrDisplay');
+                    }}
+                  />
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Or input One Time Password</Text>
                   <AppTextInput
                     placeholder='Input number'
