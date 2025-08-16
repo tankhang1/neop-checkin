@@ -32,9 +32,21 @@ const AppNavigation = () => {
         <Stack.Screen name='Register' component={RegisterScreen} options={{ presentation: 'modal' }} />
         <Stack.Screen name='Auth' component={AuthScreen} />
         <Stack.Screen name='CreateEmployee' component={CreateEmployeeScreen} />
-        <Stack.Screen name='CreateWorkplace' component={CreateWorkplaceScreen} />
+        <Stack.Screen
+          name='Location'
+          component={LocationScreen}
+          options={{
+            presentation: 'card',
+          }}
+        />
+        <Stack.Screen
+          name='CreateWorkplace'
+          component={CreateWorkplaceScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
         <Stack.Screen name='Main' component={BottomNavigation} />
-        <Stack.Screen name='Location' component={LocationScreen} />
         <Stack.Screen name='QrGenerate' component={QrGenerateScreen} />
       </Stack.Navigator>
     </NavigationContainer>

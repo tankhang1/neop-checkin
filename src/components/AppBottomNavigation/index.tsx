@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
+    gap: 6,
     height: 58,
   },
 });

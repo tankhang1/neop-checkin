@@ -1,6 +1,7 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppHeader from '@/components/AppHeader';
+import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { IMAGES } from '@/utils/theme/images';
@@ -8,6 +9,9 @@ import { s, vs } from '@/utils/theme/responsive';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 const EmployeeScreen = () => {
+  const onCreateWorkplace = () => {
+    navigationRef.navigate('CreateWorkplace');
+  };
   return (
     <AppContainer style={styles.container}>
       <AppHeader isGoBack />
@@ -16,7 +20,7 @@ const EmployeeScreen = () => {
         <View style={styles.empty_body}>
           <Image source={IMAGES.ILLUSTARTIONS.WORKSPACE} style={styles.image} />
           <Text style={styles.empty_text}>Create your first workplace</Text>
-          <AppButton label='Create Workplace' buttonContainerStyle={styles.empty_button} />
+          <AppButton onPress={onCreateWorkplace} label='Create Workplace' buttonContainerStyle={styles.empty_button} />
         </View>
       </View>
     </AppContainer>
