@@ -1,5 +1,6 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
+import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -32,7 +33,7 @@ const index = () => {
           <Image source={IMAGES.ILLUSTARTIONS.CHECKIN} style={styles.image} />
         </View>
       </ScrollView>
-      <AppButton buttonContainerStyle={styles.buttonCont} label='Scan' />
+      <AppButton buttonContainerStyle={styles.buttonCont} label='Scan' onPress={() => navigationRef.navigate('TimeRunning')} />
     </AppContainer>
   );
 };

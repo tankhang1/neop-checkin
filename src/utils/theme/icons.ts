@@ -18,6 +18,10 @@ import CLOCK from '@/assets/icons/core/clock.svg';
 import LOGOUT from '@/assets/icons/core/log-out.svg';
 import MAP_PIN from '@/assets/icons/core/map-pin.svg';
 
+import CAMERA from '@/assets/icons/core/camera.svg';
+
+import CLOCK_RIGHT from '@/assets/icons/core/clock-right.svg';
+
 export const ICONS = {
   LOGO: {
     MD: LOGO_MD,
@@ -30,6 +34,8 @@ export const ICONS = {
     X,
     LOGOUT,
     CLOCK,
+    CAMERA,
+    CLOCK_RIGHT,
   },
   SOCIAL_LOGIN: {
     GOOGLE,

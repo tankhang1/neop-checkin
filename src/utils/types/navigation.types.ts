@@ -4,6 +4,7 @@ type TAppNavigation = {
   // Public
   Login: undefined;
   Register: undefined;
+  TimeRunning: undefined;
 
   // Private
   Account: undefined;
