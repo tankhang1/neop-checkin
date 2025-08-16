@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 type TAppNavigation = {
   // Public
   Login: undefined;
@@ -9,10 +11,14 @@ type TAppNavigation = {
   Checkin: undefined;
   CreateEmployee: undefined;
   CreateWorkplace: undefined;
-  Employee: undefined;
   Location: undefined;
   QrDisplay: undefined;
   QrGenerate: undefined;
+  Main: NavigatorScreenParams<TBottomNavigation>;
 };
-
-export type { TAppNavigation };
+type TBottomNavigation = {
+  Employee: undefined;
+  Account: undefined;
+  QRCode: undefined;
+};
+export type { TAppNavigation, TBottomNavigation };

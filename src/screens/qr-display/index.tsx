@@ -2,6 +2,7 @@ import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDivider from '@/components/AppDivider/AppDivider';
 import AppSegmentControl from '@/components/AppSegmentControl/AppSegmentControl';
+import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -32,7 +33,9 @@ const options = [
 const QrDisplayScreen = () => {
   // STATE
   const [selectedOption, setSelectedOption] = useState(OPTION_ENUM.QR_DISPLAY);
-
+  const onNavEmployee = () => {
+    navigationRef.navigate('Main', { screen: 'Employee' });
+  };
   return (
     <AppContainer>
       <ScrollView horizontal style={{ height: height * 0.4 }}>
@@ -46,7 +49,7 @@ const QrDisplayScreen = () => {
             <ICONS.LOGO.MD />
           </View>
           <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan to display Check In QRcode</Text>
-          <AppButton label='Scan' buttonContainerStyle={{ marginVertical: vs(32) }} onPress={() => {}} />
+          <AppButton onPress={onNavEmployee} label='Scan' buttonContainerStyle={{ marginVertical: vs(32) }} />
           <View style={styles.middleButtonCont}>
             <AppDivider variant='horizontal' style={{ flex: 1 }} />
             <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>You are</Text>

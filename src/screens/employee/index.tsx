@@ -1,10 +1,11 @@
-import { Text, View } from 'react-native';
+import AppContainer from '@/components/AppContainer/AppContainer';
+import AppHeader from '@/components/AppHeader';
 
 const EmployeeScreen = () => {
   return (
-    <View>
-      <Text>EmployeeScreen</Text>
-    </View>
+    <AppContainer>
+      <AppHeader isGoBack />
+    </AppContainer>
   );
 };
 export default EmployeeScreen;

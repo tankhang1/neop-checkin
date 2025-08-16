@@ -65,6 +65,7 @@ export const FONTS = {
   M15: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[15]),
   M14: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[14]),
   M12: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[12]),
+  M10: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[10]),
   R20: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[20]),
   R18: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[18]),
   R17: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[17]),
