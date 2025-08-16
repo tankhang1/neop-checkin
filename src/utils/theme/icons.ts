@@ -32,6 +32,8 @@ import CAMERA from '@/assets/icons/core/camera.svg';
 
 import CLOCK_RIGHT from '@/assets/icons/core/clock-right.svg';
 
+import TRANSFORM from '@/assets/icons/core/transform.svg';
+
 export const ICONS = {
   LOGO: {
     MD: LOGO_MD,
@@ -46,6 +48,7 @@ export const ICONS = {
     CLOCK,
     CAMERA,
     CLOCK_RIGHT,
+    TRANSFORM,
     ADD_WORKPLACE,
     SEARCH,
     ADD_EMPLOYEE,

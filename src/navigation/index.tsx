@@ -4,6 +4,8 @@ import CheckinScreen from '@/screens/checkin';
 import CheckinQrCodeScreen from '@/screens/checkin-qrcode';
 import CreateEmployeeScreen from '@/screens/create-employee';
 import CreateWorkplaceScreen from '@/screens/create-workplace';
+import EditProfileScreen from '@/screens/edit-profile/EditProfileScreen';
+import EmployeeHistory from '@/screens/employee-history/EmployeeHistory';
 import InvitationQrCodeScreen from '@/screens/invitation-qrcode';
 import LocationScreen from '@/screens/location';
 import LoginScreen from '@/screens/login/LoginScreen';
@@ -33,6 +35,9 @@ const AppNavigation = () => {
         <Stack.Screen name='Auth' component={AuthScreen} />
         <Stack.Screen name='Checkin' component={CheckinScreen} />
         <Stack.Screen name='TimeRunning' component={TimeRunningScreen} />
+        <Stack.Screen name='EmployeeHistory' component={EmployeeHistory} />
+
+        <Stack.Screen name='EditProfile' component={EditProfileScreen} options={{ presentation: 'modal' }} />
         <Stack.Screen name='QrDisplay' component={QrDisplayScreen} />
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} options={{ presentation: 'modal' }} />

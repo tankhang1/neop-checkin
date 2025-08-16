@@ -5,6 +5,8 @@ type TAppNavigation = {
   Login: undefined;
   Register: undefined;
   TimeRunning: undefined;
+  EditProfile: undefined;
+  EmployeeHistory: undefined;
 
   // Private
   Account: undefined;
