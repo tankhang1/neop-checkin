@@ -2,6 +2,8 @@ import LOGO_MD from '@/assets/icons/logo/logo-md.svg';
 
 import CHECK from '@/assets/icons/core/check.svg';
 import CHERVON_LEFT from '@/assets/icons/core/chervon-left.svg';
+import PIN_LOCATION from '@/assets/icons/core/pin-location.svg';
+import X from '@/assets/icons/core/x.svg';
 
 import GOOGLE from '@/assets/icons/social-login/google.svg';
 
@@ -18,6 +20,8 @@ export const ICONS = {
   CORE: {
     CHECK: CHECK,
     CHERVON_LEFT: CHERVON_LEFT,
+    PIN_LOCATION: PIN_LOCATION,
+    X,
   },
   SOCIAL_LOGIN: {
     GOOGLE,
