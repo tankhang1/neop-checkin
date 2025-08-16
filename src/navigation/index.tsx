@@ -19,7 +19,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName='Checkin'
+        initialRouteName='Main'
         screenOptions={{
           headerShown: false,
           fullScreenGestureEnabled: true,
@@ -31,10 +31,24 @@ const AppNavigation = () => {
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} options={{ presentation: 'modal' }} />
         <Stack.Screen name='Auth' component={AuthScreen} />
+
         <Stack.Screen name='CreateEmployee' component={CreateEmployeeScreen} options={{ presentation: 'modal' }} />
-        <Stack.Screen name='CreateWorkplace' component={CreateWorkplaceScreen} />
+        <Stack.Screen
+          name='Location'
+          component={LocationScreen}
+          options={{
+            presentation: 'card',
+          }}
+        />
+        <Stack.Screen
+          name='CreateWorkplace'
+          component={CreateWorkplaceScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+
         <Stack.Screen name='Main' component={BottomNavigation} />
-        <Stack.Screen name='Location' component={LocationScreen} />
         <Stack.Screen name='QrGenerate' component={QrGenerateScreen} />
       </Stack.Navigator>
     </NavigationContainer>

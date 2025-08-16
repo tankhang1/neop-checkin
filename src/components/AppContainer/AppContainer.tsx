@@ -9,23 +9,23 @@ type AppContainerProps = {
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
   withSafeArea?: boolean;
+  isScroll?: boolean;
 };
 
-const AppContainer = ({ style, children, withSafeArea = true }: AppContainerProps) => {
-  return (
-    <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={[styles.container, style]}>
-      {withSafeArea ? (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white[1] }}>{children}</SafeAreaView>
-      ) : (
-        <>{children}</>
-      )}
-    </KeyboardAwareScrollView>
-  );
+const AppContainer = ({ style, children, withSafeArea = true, isScroll = true }: AppContainerProps) => {
+  if (isScroll)
+    return (
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false} style={[styles.container, style]}>
+        {withSafeArea ? <SafeAreaView style={styles.container}>{children}</SafeAreaView> : <>{children}</>}
+      </KeyboardAwareScrollView>
+    );
+  return <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>;
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white[1],
   },
 });
 export default AppContainer;
