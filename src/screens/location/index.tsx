@@ -13,7 +13,7 @@ const LocationScreen = () => {
     navigationRef.navigate('Main', { screen: 'Employee' });
   };
   return (
-    <AppContainer style={styles.container}>
+    <AppContainer isScroll={false} style={styles.container}>
       <AppHeader isGoBack backColor={COLORS.blue[1]} onBackPress={onGoBack} title='Location' />
       <View style={styles.body}>
         <MapView

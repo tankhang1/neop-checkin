@@ -22,7 +22,7 @@ const CreateWorkplaceScreen = ({ navigation }: Props) => {
     navigationRef.goBack();
   };
   return (
-    <AppContainer style={styles.container}>
+    <AppContainer isScroll={false} style={styles.container}>
       <AppHeader
         leftSection={
           <TouchableOpacity onPress={onCancel}>
@@ -43,6 +43,7 @@ const CreateWorkplaceScreen = ({ navigation }: Props) => {
           position: 'absolute',
           width: '100%',
           bottom: vs(40),
+          alignSelf: 'center',
         }}
       />
     </AppContainer>

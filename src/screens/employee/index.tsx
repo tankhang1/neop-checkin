@@ -13,7 +13,7 @@ const EmployeeScreen = () => {
     navigationRef.navigate('CreateWorkplace');
   };
   return (
-    <AppContainer style={styles.container}>
+    <AppContainer isScroll={false} style={styles.container}>
       <AppHeader isGoBack />
       <View style={styles.body}>
         <Text style={[FONTS.B34]}>Employees</Text>

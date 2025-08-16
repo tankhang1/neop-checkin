@@ -19,7 +19,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName='Checkin'
+        initialRouteName='Main'
         screenOptions={{
           headerShown: false,
           fullScreenGestureEnabled: true,
