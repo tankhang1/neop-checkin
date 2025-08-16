@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "401853115864",
+    "project_id": "app-checking-adebf",
+    "storage_bucket": "app-checking-adebf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401853115864:android:c8f4d6d680c44c58d956ad",
+        "android_client_info": {
+          "package_name": "ca.neoprototype.checkinapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401853115864-851msct03lbt8kn4i0cb4f12nqeq59u7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9wSet5BOMu4_cxBTH5y1dtEo5IZu9xI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401853115864-851msct03lbt8kn4i0cb4f12nqeq59u7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "401853115864-9ulaafrtrdr41ame46t6k230rmnjnt11.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ca.neoprototype.checkin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
