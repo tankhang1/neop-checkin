@@ -1,6 +1,7 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDivider from '@/components/AppDivider/AppDivider';
+import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -40,7 +41,10 @@ const TimeRunningScreen = () => {
             <Text style={{ ...FONTS.M17, color: COLORS.blue[1], marginBottom: vs(12) }}>Hugo B. Zigler</Text>
             <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(8) }}>hugobzigler@gmail.com</Text>
             <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(16) }}>310-919-4467</Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigationRef.navigate('EditProfile');
+              }}>
               <Text style={{ ...FONTS.R17, color: COLORS.blue[5] }}>Edit profile</Text>
             </TouchableOpacity>
           </View>
@@ -73,6 +77,9 @@ const TimeRunningScreen = () => {
               buttonContainerStyle={{ width: width - THEME.PADDING_HORIZONTAL * 2, marginVertical: vs(47) }}
               buttonStyle={{ backgroundColor: '#DF6D14' }}
               label='Check Out'
+              onPress={() => {
+                navigationRef.navigate('EmployeeHistory');
+              }}
             />
           </View>
         </ScrollView>
