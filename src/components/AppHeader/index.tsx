@@ -1,4 +1,3 @@
-import { WIDTH } from '@/constants/device.constants';
 import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
@@ -30,8 +29,8 @@ const AppHeader = ({ title, onBackPress, rightSection, leftSection, isGoBack, ba
           <Text style={[FONTS.R17, { color: backColor }]}>Back</Text>
         </TouchableOpacity>
       )}
-      {leftSection && leftSection}
       {title && <Text style={styles.title}>{title}</Text>}
+      {leftSection && leftSection}
       {rightSection && rightSection}
     </View>
   );
@@ -50,9 +49,12 @@ const styles = StyleSheet.create({
   title: {
     ...FONTS.M17,
     color: COLORS.blue[1],
-    width: WIDTH,
     position: 'absolute',
+    left: 0,
+    right: 0,
     textAlign: 'center',
+    alignSelf: 'center',
+    zIndex: 0,
   },
   backButton: {
     paddingLeft: s(8),
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     gap: s(6),
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 1,
   },
   back: {
     color: COLORS.blue[5],
