@@ -17,8 +17,8 @@ const BottomNavigation = () => {
       tabBar={(props) => <AppBottomNavigation {...props} />}>
       <Tab.Screen name='Employee' component={EmployeeScreen} />
       <Tab.Screen name='EmployeeDetail' component={EmployeeDetailScreen} />
-      <Tab.Screen name='Account' component={AccountScreen} />
       <Tab.Screen name='QRCode' component={QrCodeScreen} />
+      <Tab.Screen name='Account' component={AccountScreen} />
     </Tab.Navigator>
   );
 };

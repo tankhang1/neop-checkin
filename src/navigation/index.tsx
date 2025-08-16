@@ -1,6 +1,7 @@
 import AddEmployeeToWorkplaceScreen from '@/screens/add-employee-to-workplace';
 import AuthScreen from '@/screens/auth';
 import CheckinScreen from '@/screens/checkin';
+import CheckinQrCodeScreen from '@/screens/checkin-qrcode';
 import CreateEmployeeScreen from '@/screens/create-employee';
 import CreateWorkplaceScreen from '@/screens/create-workplace';
 import EditProfileScreen from '@/screens/edit-profile/EditProfileScreen';
@@ -24,7 +25,7 @@ const AppNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        //initialRouteName='Main'
+        initialRouteName='Main'
         screenOptions={{
           headerShown: false,
           fullScreenGestureEnabled: true,
@@ -67,6 +68,13 @@ const AppNavigation = () => {
         <Stack.Screen
           name='InvitationQrCode'
           component={InvitationQrCodeScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name='CheckinQrCode'
+          component={CheckinQrCodeScreen}
           options={{
             presentation: 'modal',
           }}

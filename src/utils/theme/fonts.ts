@@ -29,6 +29,7 @@ export const SIZE = {
   34: fontScaleRatio(mvs(34)),
   36: fontScaleRatio(mvs(36)),
   40: fontScaleRatio(mvs(40)),
+  48: fontScaleRatio(mvs(48)),
 };
 
 const fontPropertiesGenerator = (fontFamily: string, fontSize: number) => {
@@ -61,6 +62,7 @@ export const FONTS = {
   SB15: fontPropertiesGenerator(FONT_FAMILY.semibold, SIZE[15]),
   SB14: fontPropertiesGenerator(FONT_FAMILY.semibold, SIZE[14]),
   SB12: fontPropertiesGenerator(FONT_FAMILY.semibold, SIZE[12]),
+  M24: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[24]),
   M19: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[19]),
   M17: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[17]),
   M16: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[16]),
@@ -69,6 +71,7 @@ export const FONTS = {
   M13: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[13]),
   M12: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[12]),
   M10: fontPropertiesGenerator(FONT_FAMILY.medium, SIZE[10]),
+  R48: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[48]),
   R20: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[20]),
   R18: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[18]),
   R17: fontPropertiesGenerator(FONT_FAMILY.regular, SIZE[17]),
