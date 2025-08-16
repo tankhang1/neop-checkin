@@ -18,6 +18,7 @@ type TAppNavigation = {
   QrDisplay: undefined;
   QrGenerate: undefined;
   InvitationQrCode: undefined;
+  CheckinQrCode: undefined;
   Main: NavigatorScreenParams<TBottomNavigation>;
 };
 type TBottomNavigation = {

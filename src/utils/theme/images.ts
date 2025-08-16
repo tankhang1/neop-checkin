@@ -1,5 +1,6 @@
 import ADMIN from '@/assets/images/illustrations/Admin.png';
 import EMPLOYEE from '@/assets/images/illustrations/Employee.png';
+import PIN_LOCATION from '@/assets/images/illustrations/Pin-Location.png';
 import QRCODE from '@/assets/images/illustrations/QrCode.png';
 import WORKSPACE from '@/assets/images/illustrations/Workspace.png';
 
@@ -17,5 +18,6 @@ export const IMAGES = {
   },
   CORE: {
     QR_CODE,
+    PIN_LOCATION,
   },
 };
