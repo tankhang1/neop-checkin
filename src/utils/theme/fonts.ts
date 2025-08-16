@@ -35,7 +35,7 @@ const fontPropertiesGenerator = (fontFamily: string, fontSize: number) => {
     fontFamily: fontFamily,
     fontSize: fontSize,
     color: COLORS.black[1],
-    lineHeight: mvs(20),
+    lineHeight: fontSize,
   };
 };
 // Bold: 700
