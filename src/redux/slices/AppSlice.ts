@@ -6,6 +6,7 @@ export type TWorkspace = {
   latitude: number;
   longitude: number;
   brandname: string;
+  accountId: string;
 };
 export type TPosition = 'Staff' | 'Manager';
 export type TStatus = 'Working' | 'Off' | 'Disable';
@@ -24,12 +25,19 @@ export type TEmployee = {
   status: TStatus;
   worklist: TWorklist[];
 };
+export type TAccount = {
+  id: string;
+  email: string;
+};
 export type TState = {
   brandname: string;
   workspace: TWorkspace[];
   employees: TEmployee[];
+  account: TAccount | null;
 };
+
 const initialState: TState = {
+  account: null,
   brandname: '',
   workspace: [],
   employees: [],
@@ -41,6 +49,9 @@ const appSlice = createSlice({
   reducers: {
     updateBrandName: (state, action: PayloadAction<string>) => {
       state.brandname = action.payload;
+    },
+    setAccount: (state, action: PayloadAction<TAccount>) => {
+      state.account = action.payload;
     },
     setWorkspace: (state, action: PayloadAction<TWorkspace[]>) => {
       state.workspace = action.payload;
@@ -63,6 +74,14 @@ const appSlice = createSlice({
     },
   },
 });
-export const { updateBrandName, setWorkspace, setEmployees, addWorkspace, addEmployee, deleteEmployee, deleteWorkspace } =
-  appSlice.actions;
+export const {
+  updateBrandName,
+  setAccount,
+  setWorkspace,
+  setEmployees,
+  addWorkspace,
+  addEmployee,
+  deleteEmployee,
+  deleteWorkspace,
+} = appSlice.actions;
 export default appSlice.reducer;
