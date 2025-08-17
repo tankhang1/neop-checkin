@@ -1,4 +1,5 @@
 import LOGO_MD from '@/assets/icons/logo/logo-md.svg';
+import LOGO_WHITE from '@/assets/icons/logo/logo-white.svg';
 
 import ADD_EMPLOYEE from '@/assets/icons/core/add-employee.svg';
 import ADD_WORKPLACE from '@/assets/icons/core/add-workplace.svg';
@@ -11,6 +12,7 @@ import DOWNLOAD from '@/assets/icons/core/download.svg';
 import EMAIL from '@/assets/icons/core/email.svg';
 import PHONE from '@/assets/icons/core/phone.svg';
 import PIN_LOCATION from '@/assets/icons/core/pin-location.svg';
+import PLACE_HOLDER from '@/assets/icons/core/placeholder.svg';
 import SEARCH from '@/assets/icons/core/search.svg';
 import SHARE from '@/assets/icons/core/share.svg';
 import X from '@/assets/icons/core/x.svg';
@@ -37,6 +39,7 @@ import TRANSFORM from '@/assets/icons/core/transform.svg';
 export const ICONS = {
   LOGO: {
     MD: LOGO_MD,
+    WHITE: LOGO_WHITE,
   },
   CORE: {
     CHECK: CHECK,
@@ -59,6 +62,7 @@ export const ICONS = {
     EMAIL,
     SHARE,
     CHERVON_DOWN,
+    PLACE_HOLDER,
   },
   SOCIAL_LOGIN: {
     GOOGLE,

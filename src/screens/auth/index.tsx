@@ -4,6 +4,7 @@ import AppDivider from '@/components/AppDivider/AppDivider';
 import AppSegmentControl from '@/components/AppSegmentControl/AppSegmentControl';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
 import { navigationRef } from '@/navigation';
+import { updateBrandName } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -12,6 +13,7 @@ import { height, s, vs, width } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
 import { useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 enum OPTION_ENUM {
   ADMIN = 'ADMIN',
@@ -46,6 +48,7 @@ const options = [
 ];
 
 const AuthScreen = () => {
+  const dispatch = useDispatch();
   // STATE
   const [selectedOption, setSelectedOption] = useState(OPTION_ENUM.ADMIN);
   const [brandName, setBrandName] = useState('');
@@ -56,6 +59,12 @@ const AuthScreen = () => {
   const bottomScrollRef = useRef<ScrollView>(null);
 
   // RENDER
+  const onStart = async () => {
+    dispatch(updateBrandName(brandName));
+    navigationRef.navigate('Main', {
+      screen: 'Employee',
+    });
+  };
 
   return (
     <AppContainer withSafeArea={false}>
@@ -87,7 +96,7 @@ const AuthScreen = () => {
                     value={brandName}
                     onChangeText={setBrandName}
                   />
-                  <AppButton label='Start' disable={!brandName} />
+                  <AppButton onPress={onStart} label='Start' disable={!brandName} />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(44) }]}>
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan your Invitation QRcode</Text>
@@ -174,7 +183,8 @@ const styles = StyleSheet.create({
     width: width,
   },
   body: {
-    paddingVertical: vs(36),
+    paddingTop: vs(24),
+    paddingBottom: vs(36),
     //paddingHorizontal: THEME.PADDING_HORIZONTAL,
   },
 });
