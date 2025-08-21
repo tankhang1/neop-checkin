@@ -13,6 +13,7 @@ import EMAIL from '@/assets/icons/core/email.svg';
 import PHONE from '@/assets/icons/core/phone.svg';
 import PIN_LOCATION from '@/assets/icons/core/pin-location.svg';
 import PLACE_HOLDER from '@/assets/icons/core/placeholder.svg';
+import PLUS from '@/assets/icons/core/plus.svg';
 import SEARCH from '@/assets/icons/core/search.svg';
 import SHARE from '@/assets/icons/core/share.svg';
 import X from '@/assets/icons/core/x.svg';
@@ -63,6 +64,7 @@ export const ICONS = {
     SHARE,
     CHERVON_DOWN,
     PLACE_HOLDER,
+    PLUS,
   },
   SOCIAL_LOGIN: {
     GOOGLE,

@@ -28,6 +28,9 @@ export type TEmployee = {
 export type TAccount = {
   id: string;
   email: string;
+  name: string;
+  phone: string;
+  url: string;
 };
 export type TState = {
   brandname: string;
@@ -72,6 +75,11 @@ const appSlice = createSlice({
       state.workspace = state.workspace.filter((ws) => ws.id !== action.payload);
       state.employees = state.employees.filter((emp) => emp.workspaceId !== action.payload);
     },
+    logout: (state) => {
+      state.account = null;
+      state.workspace = [];
+      state.employees = [];
+    },
   },
 });
 export const {
@@ -83,5 +91,6 @@ export const {
   addEmployee,
   deleteEmployee,
   deleteWorkspace,
+  logout,
 } = appSlice.actions;
 export default appSlice.reducer;

@@ -1,17 +1,66 @@
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDropdown from '@/components/AppDropdown';
 import AppHeader from '@/components/AppHeader';
+import { createWorkspace } from '@/firebase/workspace.firebase';
+import { TSearchResult } from '@/hooks/useSearchLocation';
+import { uuid } from '@/hooks/uuid';
 import { navigationRef } from '@/navigation';
+import { addWorkspace } from '@/redux/slices/AppSlice';
+import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { ICONS } from '@/utils/theme/icons';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+import Toast from 'react-native-toast-message';
+import { useDispatch, useSelector } from 'react-redux';
 import BottomLocation from './components/BottomLocation';
 
-const LocationScreen = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'Location'>;
+const LocationScreen = ({ route, navigation }: Props) => {
+  const dispatch = useDispatch();
+  const { brandname, account } = useSelector((state: RootState) => state.app);
+  const workspace = route.params?.workspace || '';
+  const location = route.params?.location;
+  const [curLocation, setCurLocation] = useState<TSearchResult | undefined>(undefined);
   const onGoBack = () => {
     navigationRef.navigate('Main', { screen: 'Employee' });
   };
+  const onCreateWorkspace = () => {
+    const id = uuid();
+    dispatch(
+      addWorkspace({
+        name: workspace,
+        accountId: account?.id || '',
+        address: curLocation?.display_name || '',
+        brandname,
+        id,
+        latitude: curLocation?.lat ? +curLocation.lat : 0,
+        longitude: curLocation?.lon ? +curLocation.lon : 0,
+      }),
+    );
+    createWorkspace({
+      name: workspace,
+      accountId: account?.id || '',
+      address: curLocation?.display_name || '',
+      brandname,
+      id,
+      latitude: curLocation?.lat ? +curLocation.lat : 0,
+      longitude: curLocation?.lon ? +curLocation.lon : 0,
+    });
+    Toast.show({
+      type: 'success',
+      text1: 'Workspace created successfully',
+    });
+    navigation.popTo('Main', { screen: 'Employee' });
+  };
+  useEffect(() => {
+    if (location) {
+      setCurLocation(location);
+    }
+  }, [location]);
   return (
     <AppContainer isScroll={false} style={styles.container}>
       <AppHeader isGoBack backColor={COLORS.blue[1]} onBackPress={onGoBack} title='Location' />
@@ -19,12 +68,22 @@ const LocationScreen = () => {
         <MapView
           style={styles.container}
           initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: curLocation?.lat ? +curLocation.lat : 37.78825,
+            longitude: curLocation?.lon ? +curLocation.lon : -122.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
-          }}
-        />
+          }}>
+          {curLocation && (
+            <Marker
+              coordinate={{
+                latitude: +curLocation.lat,
+                longitude: +curLocation.lon,
+              }}
+              title='Selected Location'
+              description={curLocation?.display_name || ''}
+            />
+          )}
+        </MapView>
         <View style={styles.search}>
           <AppDropdown
             textProps={{
@@ -33,12 +92,13 @@ const LocationScreen = () => {
               containerInputStyle: {
                 gap: 8,
               },
-              rightSection: <ICONS.CORE.X />,
             }}
+            isClosable
+            onCallback={(value) => setCurLocation(value)}
           />
         </View>
       </View>
-      <BottomLocation address='966 Glen Ellyn Rd' />
+      <BottomLocation address={curLocation?.display_name} onSubmit={onCreateWorkspace} />
     </AppContainer>
   );
 };

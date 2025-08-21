@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    borderRadius: s(8),
   },
   middleContainer: {
     marginHorizontal: s(8),

@@ -2,25 +2,34 @@ import AppButton from '@/components/AppButton/AppButton';
 import AppHeader from '@/components/AppHeader';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
 import { navigationRef } from '@/navigation';
+import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
+import { useMemo } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import Card from './components/Card';
 
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
-  const isEmpty = false; // This should be replaced with actual logic to check if there are employees
+  const { workspace } = useSelector((state: RootState) => state.app);
+  const isEmpty = useMemo(() => workspace.length === 0, [workspace]);
   const onCreateWorkplace = () => {
     navigationRef.navigate('CreateWorkplace');
   };
   const onAddEmployee = () => {
     Alert.alert('More Workplace', 'Connect to your account to create more workplaces', [
       { text: 'Cancel', style: 'default' },
-      { text: 'Connect', style: 'default', onPress: () => navigationRef.navigate('AddEmployeeToWorkplace') },
+      {
+        text: 'Connect',
+        style: 'default',
+        isPreferred: true,
+        onPress: () => navigationRef.navigate('AddEmployeeToWorkplace'),
+      },
     ]);
   };
   return (
@@ -36,14 +45,20 @@ const EmployeeScreen = () => {
             ) : null
           }
         />
-        <View style={styles.search}>
-          <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>
-          <AppTextInput containerInputStyle={{ gap: s(8) }} leftSection={<ICONS.CORE.SEARCH />} placeholder='Search' />
+        {!isEmpty && (
+          <View style={styles.search}>
+            <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>
+            <AppTextInput containerInputStyle={{ gap: s(8) }} leftSection={<ICONS.CORE.SEARCH />} placeholder='Search' />
+          </View>
+        )}
+      </View>
+      {!isEmpty && (
+        <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
+          {workspace.map((item) => (
+            <Card key={item.id} workplace={item} onAddEmployee={onAddEmployee} />
+          ))}
         </View>
-      </View>
-      <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
-        <Card workplace='Workplace 1' onAddEmployee={onAddEmployee} />
-      </View>
+      )}
       {isEmpty && (
         <View style={styles.body}>
           <Text style={[FONTS.B34]}>Employees</Text>

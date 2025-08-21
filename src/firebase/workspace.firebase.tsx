@@ -10,3 +10,8 @@ export const deleteWorkspace = async (workspaceId: string) => {
 export const updateWorkspace = async (workspace: TWorkspace) => {
   await firestore().collection('Workspaces').doc(workspace.id).update(workspace);
 };
+
+export const getEmployeeInWorkspace = async (workspaceId: string) => {
+  const snapshot = await firestore().collection('Employees').where('workspaceId', '==', workspaceId).get();
+  return snapshot.docs.map((doc) => doc.data());
+};

@@ -1,3 +1,4 @@
+import { TSearchResult } from '@/hooks/useSearchLocation';
 import { NavigatorScreenParams } from '@react-navigation/native';
 
 type TAppNavigation = {
@@ -16,7 +17,10 @@ type TAppNavigation = {
   AddEmployeeToWorkplace: undefined;
   CreateWorkplace: undefined;
   EmployeeDetail: undefined;
-  Location: undefined;
+  Location: {
+    workspace: string;
+    location?: TSearchResult;
+  };
   QrDisplay: undefined;
   QrGenerate: undefined;
   InvitationQrCode: undefined;

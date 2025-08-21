@@ -19,7 +19,11 @@ const AppContainer = ({ style, children, withSafeArea = true, isScroll = true }:
         {withSafeArea ? <SafeAreaView style={styles.container}>{children}</SafeAreaView> : <>{children}</>}
       </KeyboardAwareScrollView>
     );
-  return <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView edges={['top', 'left', 'right']} style={[styles.container, style]}>
+      {children}
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({

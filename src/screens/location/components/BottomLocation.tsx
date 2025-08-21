@@ -8,17 +8,22 @@ import { StyleSheet, Text, View } from 'react-native';
 
 type TBottomLocation = {
   address?: string;
+  onSubmit?: () => void;
 };
-const BottomLocation = ({ address }: TBottomLocation) => {
+const BottomLocation = ({ address, onSubmit }: TBottomLocation) => {
   return (
     <View style={styles.container}>
       <Text style={[FONTS.M17, { color: COLORS.blue[1] }]}>Your Workplace</Text>
       <View style={styles.address}>
         <ICONS.CORE.PIN_LOCATION fill={COLORS.blue[1]} />
-        {address && <Text style={[FONTS.R17, { color: COLORS.blue[1] }]}>{address}</Text>}
+        {address && (
+          <Text textBreakStrategy='balanced' style={styles.label}>
+            {address}
+          </Text>
+        )}
       </View>
 
-      <AppButton label='Submit' />
+      <AppButton label='Submit' onPress={onSubmit} />
     </View>
   );
 };
@@ -46,6 +51,12 @@ const styles = StyleSheet.create({
     marginTop: vs(16),
     marginBottom: vs(20),
     gap: s(12),
+  },
+  label: {
+    ...FONTS.R17,
+    color: COLORS.blue[1],
+    maxWidth: '90%',
+    lineHeight: vs(20),
   },
 });
 

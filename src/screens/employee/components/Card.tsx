@@ -1,25 +1,37 @@
+import { getEmployeeInWorkspace } from '@/firebase/workspace.firebase';
+import { TEmployee, TWorkspace } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { s, vs } from '@/utils/theme/responsive';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CardItem from './CardItem';
 
 type TCard = {
-  workplace: string;
+  workplace: TWorkspace;
   onAddEmployee?: () => void;
 };
 const Card = ({ workplace, onAddEmployee }: TCard) => {
-  const isEmployee = true;
-  const isDownload = false;
+  const [listEmployee, setListEmployee] = useState<TEmployee[]>([]);
+  const isDownload = useMemo(() => listEmployee.length > 1, [listEmployee.length]);
+  const onGetListEmployee = useCallback(async () => {
+    const employees = await getEmployeeInWorkspace(workplace.id);
+    if (employees.length > 0) {
+      setListEmployee([...employees] as TEmployee[]);
+    }
+  }, [workplace.id]);
+  useEffect(() => {
+    onGetListEmployee();
+  }, [workplace.id, onGetListEmployee]);
   return (
     <View style={styles.overall}>
       <View style={styles.container}>
-        <Text style={[FONTS.M19, { color: COLORS.blue[1] }]}>{workplace}</Text>
+        <Text style={[FONTS.M19, { color: COLORS.blue[1] }]}>{workplace.name}</Text>
         <View style={styles.actions}>
-          {isEmployee && (
+          {isDownload && (
             <TouchableOpacity onPress={onAddEmployee}>
-              <ICONS.CORE.DOWNLOAD color={isDownload ? COLORS.blue[5] : COLORS.blue[3]} />
+              <ICONS.CORE.DOWNLOAD color={COLORS.blue[5]} />
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={onAddEmployee}>
@@ -27,7 +39,16 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
           </TouchableOpacity>
         </View>
       </View>
-      {isEmployee && <CardItem id='1' name='John Doe' role='Software Engineer' status='Working' />}
+      {listEmployee.map((item, index) => (
+        <CardItem
+          key={item.id}
+          id={item.id}
+          name={item.name}
+          role={item.position}
+          status={item.status}
+          isDivider={index !== listEmployee.length - 1}
+        />
+      ))}
     </View>
   );
 };

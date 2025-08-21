@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: s(20),
-    paddingTop: vs(10),
     gap: vs(32),
   },
   gap20: {

@@ -1,20 +1,37 @@
-import React, { useRef, useState } from 'react';
-import { findNodeHandle, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import { TSearchResult, useSearchLocation } from '@/hooks/useSearchLocation';
+import { FONTS } from '@/utils/theme/fonts';
+import { ICONS } from '@/utils/theme/icons';
+import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
+import {
+  findNodeHandle,
+  FlatList,
+  ListRenderItemInfo,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
+} from 'react-native';
 import { Portal } from 'react-native-portalize';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { runOnJS } from 'react-native-worklets';
 import AppTextInput, { AppTextInputProps } from '../AppTextInput/AppTextInput';
 
-const OPTIONS = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-
 type TAppDropdown = {
   textProps: AppTextInputProps;
+  isClosable?: boolean;
+  onCallback?: (value: TSearchResult) => void;
 };
-const AppDropdown = ({ textProps }: TAppDropdown) => {
+const AppDropdown = ({ textProps, isClosable, onCallback }: TAppDropdown) => {
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<TSearchResult | null>(null);
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [search, setSearch] = useState('');
+
   const inputRef = useRef<View>(null);
+  const { searchLocation, loading, results } = useSearchLocation();
+  const deferredSearch = useDeferredValue(search);
 
   // Reanimated values
   const opacity = useSharedValue(0);
@@ -24,7 +41,11 @@ const AppDropdown = ({ textProps }: TAppDropdown) => {
     opacity: opacity.value,
     transform: [{ translateY: translateY.value }],
   }));
-
+  const onReset = () => {
+    setSearch('');
+    setSelected(null);
+    closeDropdown();
+  };
   const openDropdown = () => {
     if (inputRef.current) {
       const handle = findNodeHandle(inputRef.current);
@@ -48,15 +69,45 @@ const AppDropdown = ({ textProps }: TAppDropdown) => {
       }
     });
   };
-
-  const handleSelect = (item: string) => {
+  const handleSelect = (item: TSearchResult) => {
     setSelected(item);
+    setSearch(item.name || '');
     closeDropdown();
+    onCallback?.(item);
   };
+  const renderItem = ({ item }: ListRenderItemInfo<TSearchResult>) => {
+    return (
+      <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
+        <Text style={FONTS.M14}>{item.name}</Text>
+        <Text style={FONTS.R12} numberOfLines={1}>
+          {item.display_name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  useEffect(() => {
+    searchLocation(deferredSearch);
+  }, [deferredSearch]);
 
   return (
     <View ref={inputRef}>
-      <AppTextInput onPress={openDropdown} placeholder='Select option' {...textProps} />
+      <AppTextInput
+        onPress={openDropdown}
+        placeholder='Select option'
+        {...textProps}
+        defaultValue={search}
+        onChangeText={setSearch}
+        rightSection={
+          isClosable ? (
+            <TouchableOpacity onPress={onReset}>
+              <ICONS.CORE.X />
+            </TouchableOpacity>
+          ) : (
+            textProps.rightSection
+          )
+        }
+      />
 
       {visible && (
         <Portal>
@@ -75,15 +126,7 @@ const AppDropdown = ({ textProps }: TAppDropdown) => {
               },
               animatedStyle,
             ]}>
-            <FlatList
-              data={OPTIONS}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.option} onPress={() => handleSelect(item)}>
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              )}
-            />
+            <FlatList data={results} keyExtractor={(item) => item.place_id.toString()} renderItem={renderItem} />
           </Animated.View>
         </Portal>
       )}
@@ -107,6 +150,11 @@ const styles = StyleSheet.create({
   option: {
     paddingVertical: 12,
     paddingHorizontal: 8,
+  },
+  item: {
+    paddingVertical: 14,
+    paddingLeft: 10,
+    gap: 4,
   },
 });
 

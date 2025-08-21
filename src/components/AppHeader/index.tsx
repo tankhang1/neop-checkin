@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'relative',
     height: vs(44),
+    backgroundColor: COLORS.white[1],
   },
   title: {
     ...FONTS.M17,

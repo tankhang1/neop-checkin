@@ -49,21 +49,9 @@ const AppNavigation = () => {
             presentation: 'card',
           }}
         />
-        <Stack.Screen
-          name='CreateWorkplace'
-          component={CreateWorkplaceScreen}
-          options={{
-            presentation: 'modal',
-          }}
-        />
+        <Stack.Screen name='CreateWorkplace' component={CreateWorkplaceScreen} />
 
-        <Stack.Screen
-          name='AddEmployeeToWorkplace'
-          component={AddEmployeeToWorkplaceScreen}
-          options={{
-            presentation: 'modal',
-          }}
-        />
+        <Stack.Screen name='AddEmployeeToWorkplace' component={AddEmployeeToWorkplaceScreen} />
         <Stack.Screen
           name='InvitationQrCode'
           component={InvitationQrCodeScreen}
