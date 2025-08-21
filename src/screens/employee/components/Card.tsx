@@ -18,12 +18,18 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
   const onGetListEmployee = useCallback(async () => {
     const employees = await getEmployeeInWorkspace(workplace.id);
     if (employees.length > 0) {
-      setListEmployee([...employees] as TEmployee[]);
+      // Sort so that managers are on top
+      const sorted = [...employees].sort((a, b) => {
+        if (a.position === 'Manager' && b.position !== 'Manager') return -1;
+        if (a.position !== 'Manager' && b.position === 'Manager') return 1;
+        return 0;
+      });
+      setListEmployee(sorted as TEmployee[]);
     }
   }, [workplace.id]);
   useEffect(() => {
     onGetListEmployee();
-  }, [workplace.id, onGetListEmployee]);
+  }, [onGetListEmployee]);
   return (
     <View style={styles.overall}>
       <View style={styles.container}>
@@ -39,16 +45,19 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
           </TouchableOpacity>
         </View>
       </View>
-      {listEmployee.map((item, index) => (
-        <CardItem
-          key={item.id}
-          id={item.id}
-          name={item.name}
-          role={item.position}
-          status={item.status}
-          isDivider={index !== listEmployee.length - 1}
-        />
-      ))}
+      <View>
+        {listEmployee.map((item, index) => (
+          <CardItem
+            key={item.id}
+            id={item.id}
+            workspaceId={workplace.id}
+            name={item.name}
+            role={item.position}
+            status={item.status}
+            isDivider={index !== listEmployee.length - 1}
+          />
+        ))}
+      </View>
     </View>
   );
 };
@@ -69,6 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white[1],
     borderRadius: s(8),
     padding: s(16),
+    paddingBottom: 0,
     gap: vs(16),
   },
 });

@@ -1,14 +1,16 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppHeader from '@/components/AppHeader';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
+import { getWorkspacesByBandnameAndUserId } from '@/firebase/workspace.firebase';
 import { navigationRef } from '@/navigation';
+import { TWorkspace } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -16,22 +18,35 @@ import Card from './components/Card';
 
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
-  const { workspace } = useSelector((state: RootState) => state.app);
-  const isEmpty = useMemo(() => workspace.length === 0, [workspace]);
+  const { brandname, account } = useSelector((state: RootState) => state.app);
+  const [listWorkspace, setListWorkspace] = useState<TWorkspace[]>([]);
   const onCreateWorkplace = () => {
     navigationRef.navigate('CreateWorkplace');
   };
-  const onAddEmployee = () => {
+  const onAddEmployee = (workspaceId: string) => {
     Alert.alert('More Workplace', 'Connect to your account to create more workplaces', [
       { text: 'Cancel', style: 'default' },
       {
         text: 'Connect',
         style: 'default',
         isPreferred: true,
-        onPress: () => navigationRef.navigate('AddEmployeeToWorkplace'),
+        onPress: () =>
+          navigationRef.navigate('AddEmployeeToWorkplace', {
+            workspaceId,
+          }),
       },
     ]);
   };
+  const onGetListWorkspace = useCallback(async () => {
+    const workspaces = await getWorkspacesByBandnameAndUserId(brandname, account?.id);
+    setListWorkspace(workspaces);
+  }, [brandname, account?.id]);
+  const isEmpty = useMemo(() => listWorkspace.length === 0, [listWorkspace]);
+
+  useEffect(() => {
+    onGetListWorkspace();
+  }, [onGetListWorkspace]);
+
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
@@ -54,8 +69,8 @@ const EmployeeScreen = () => {
       </View>
       {!isEmpty && (
         <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
-          {workspace.map((item) => (
-            <Card key={item.id} workplace={item} onAddEmployee={onAddEmployee} />
+          {listWorkspace.map((item) => (
+            <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} />
           ))}
         </View>
       )}

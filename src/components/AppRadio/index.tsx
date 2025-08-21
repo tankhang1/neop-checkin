@@ -1,18 +1,18 @@
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
-import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type TAppRadio = {
   label: string;
+  checked?: boolean;
+  onPress?: (checked: boolean) => void;
 };
-const AppRadio = ({ label }: TAppRadio) => {
-  const [selected, setSelected] = useState(false);
+const AppRadio = ({ label, checked = false, onPress }: TAppRadio) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={() => setSelected(!selected)}>
+    <TouchableOpacity style={styles.container} onPress={() => onPress?.(!checked)}>
       <View style={styles.radio_container}>
-        <View style={[styles.radio, selected && { borderColor: COLORS.blue[5] }]}>
-          {selected && <View style={styles.radio_active} />}
+        <View style={[styles.radio, checked && { borderColor: COLORS.blue[5] }]}>
+          {checked && <View style={styles.radio_active} />}
         </View>
       </View>
       <Text style={styles.label}>{label}</Text>

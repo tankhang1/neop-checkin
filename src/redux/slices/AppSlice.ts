@@ -23,7 +23,6 @@ export type TEmployee = {
   phone: string;
   position: TPosition;
   status: TStatus;
-  worklist: TWorklist[];
 };
 export type TAccount = {
   id: string;

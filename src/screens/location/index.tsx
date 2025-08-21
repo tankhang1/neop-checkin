@@ -1,5 +1,5 @@
+import AppAddressDropdown from '@/components/AppAddressDropdown';
 import AppContainer from '@/components/AppContainer/AppContainer';
-import AppDropdown from '@/components/AppDropdown';
 import AppHeader from '@/components/AppHeader';
 import { createWorkspace } from '@/firebase/workspace.firebase';
 import { TSearchResult } from '@/hooks/useSearchLocation';
@@ -85,7 +85,7 @@ const LocationScreen = ({ route, navigation }: Props) => {
           )}
         </MapView>
         <View style={styles.search}>
-          <AppDropdown
+          <AppAddressDropdown
             textProps={{
               placeholder: '966 Glen Ellyn Rd',
               leftSection: <ICONS.CORE.PIN_LOCATION />,

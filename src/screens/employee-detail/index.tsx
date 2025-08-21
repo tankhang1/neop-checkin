@@ -1,32 +1,85 @@
 import AppHeader from '@/components/AppHeader';
+import { deleteEmployeeInWorkspace, getEmployeeInfo } from '@/firebase/workspace.firebase';
+import { navigationRef } from '@/navigation';
+import { TEmployee } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { ICONS } from '@/utils/theme/icons';
 import { s, vs } from '@/utils/theme/responsive';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import ProfileCard from './components/ProfileCard';
 import WorkLogList from './components/WorkLogList';
 
-const EmployeeDetailScreen = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'EmployeeDetail'>;
+const EmployeeDetailScreen = ({ route }: Props) => {
+  const workspaceId = route.params.workspaceId;
+  const employeeId = route.params.employeeId;
+  const [employee, setEmployee] = useState<TEmployee | null>(null);
+  const onGetEmployeeInfo = useCallback(async () => {
+    if (!employeeId || !workspaceId) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Invalid employee or workspace ID',
+      });
+      navigationRef.goBack();
+      return;
+    }
+    const data = await getEmployeeInfo(employeeId);
+    setEmployee(data as TEmployee);
+  }, [employeeId, workspaceId]);
+  const onDeleteEmployee = () => {
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this employee?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            if (employeeId) {
+              navigationRef.goBack();
+              await deleteEmployeeInWorkspace(employeeId);
+              Toast.show({
+                type: 'success',
+                text1: 'Employee deleted successfully',
+              });
+            }
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  };
   const insets = useSafeAreaInsets();
+  useEffect(() => {
+    onGetEmployeeInfo();
+  }, [onGetEmployeeInfo]);
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <AppHeader
         isGoBack
-        title='Hugo B. Zigler'
+        title={employee ? employee.name : '-'}
         rightSection={
           <View style={[styles.rows, styles.pr20]}>
             <TouchableOpacity>
               <ICONS.CORE.CALENDAR />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onDeleteEmployee}>
               <ICONS.CORE.DELETE />
             </TouchableOpacity>
           </View>
         }
       />
       <View style={styles.body}>
-        <ProfileCard />
+        <ProfileCard employee={employee} onForceUpdate={onGetEmployeeInfo} />
         <WorkLogList />
       </View>
     </View>

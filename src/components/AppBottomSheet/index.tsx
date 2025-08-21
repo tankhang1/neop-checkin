@@ -1,3 +1,4 @@
+import { HEIGHT } from '@/constants/device.constants';
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Portal } from 'react-native-portalize';
@@ -9,9 +10,10 @@ type AppBottomSheetProps = {
   visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  height?: number;
 };
 
-const AppBottomSheet = ({ visible, onClose, children }: AppBottomSheetProps) => {
+const AppBottomSheet = ({ visible, onClose, children, height = HEIGHT * 0.4 }: AppBottomSheetProps) => {
   if (!visible) return null;
 
   return (
@@ -22,7 +24,7 @@ const AppBottomSheet = ({ visible, onClose, children }: AppBottomSheetProps) => 
       </Animated.View>
 
       {/* Bottom sheet with slide in/out */}
-      <Animated.View entering={SlideInDown} exiting={SlideOutDown} style={styles.sheet}>
+      <Animated.View entering={SlideInDown} exiting={SlideOutDown} style={[styles.sheet, { height }]}>
         <View style={styles.content}>{children}</View>
       </Animated.View>
     </Portal>
@@ -38,7 +40,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: height * 0.4,
     backgroundColor: '#fff',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,

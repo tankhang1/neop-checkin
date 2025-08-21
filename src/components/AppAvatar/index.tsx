@@ -10,14 +10,14 @@ type AppAvatarProps = {
 
 const AppAvatar: React.FC<AppAvatarProps> = ({ name, size = 40, avatar }) => {
   // Get initials
-  const getInitials = (text: string) => {
+  const getInitials = (text: string = 'Checkin') => {
     const words = text.trim().split(' ');
     if (words.length === 1) return words[0][0]?.toUpperCase();
     return (words[0][0] + words[words.length - 1][0]).toUpperCase();
   };
 
   // Generate color from string
-  const stringToColor = (str: string) => {
+  const stringToColor = (str: string = 'Checkin') => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);

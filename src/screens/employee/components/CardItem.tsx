@@ -1,3 +1,4 @@
+import AppAvatar from '@/components/AppAvatar';
 import { navigationRef } from '@/navigation';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
@@ -6,6 +7,7 @@ import { s, vs } from '@/utils/theme/responsive';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 type TCardItem = {
+  workspaceId: string;
   id: string;
   name: string;
   role: string;
@@ -35,22 +37,23 @@ const MapStatus = new Map([
     },
   ],
 ]);
-const CardItem = ({ name, role, status, isDivider }: TCardItem) => {
+const CardItem = ({ id, workspaceId, name, role, status, isDivider }: TCardItem) => {
   const onEmployeeDetail = () => {
-    navigationRef.navigate('EmployeeDetail');
+    navigationRef.navigate('EmployeeDetail', {
+      employeeId: id,
+      workspaceId: workspaceId,
+    });
   };
   return (
     <TouchableOpacity style={styles.card} onPress={onEmployeeDetail}>
       {/* Avatar */}
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>NP</Text>
-      </View>
+      <AppAvatar name={name} />
 
       <View style={[styles.rightSection, isDivider && { borderBottomWidth: 1, borderColor: COLORS.blue[3] }]}>
         {/* User Info */}
         <View style={styles.info}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.role}>{role}</Text>
+          <Text style={[styles.name, status === 'Disable' && { color: COLORS.blue[3] }]}>{name}</Text>
+          <Text style={[styles.role, status === 'Disable' && { color: COLORS.blue[3] }]}>{role}</Text>
         </View>
 
         <View style={styles.actions}>
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-
+    gap: s(16),
     backgroundColor: COLORS.white[1],
   },
   avatar: {

@@ -23,7 +23,7 @@ type TAppDropdown = {
   isClosable?: boolean;
   onCallback?: (value: TSearchResult) => void;
 };
-const AppDropdown = ({ textProps, isClosable, onCallback }: TAppDropdown) => {
+const AppAddressDropdown = ({ textProps, isClosable, onCallback }: TAppDropdown) => {
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState<TSearchResult | null>(null);
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
@@ -158,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppDropdown;
+export default AppAddressDropdown;

@@ -14,9 +14,14 @@ type TAppNavigation = {
   Auth: undefined;
   Checkin: undefined;
   CreateEmployee: undefined;
-  AddEmployeeToWorkplace: undefined;
+  AddEmployeeToWorkplace: {
+    workspaceId: string;
+  };
   CreateWorkplace: undefined;
-  EmployeeDetail: undefined;
+  EmployeeDetail: {
+    employeeId: string;
+    workspaceId: string;
+  };
   Location: {
     workspace: string;
     location?: TSearchResult;
