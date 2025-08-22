@@ -1,4 +1,4 @@
-import { TEmployee, TWorkspace } from '@/redux/slices/AppSlice';
+import { TEmployee, TWorklist, TWorkspace } from '@/redux/slices/AppSlice';
 import firestore from '@react-native-firebase/firestore';
 
 export const createWorkspace = async (workspace: TWorkspace) => {
@@ -44,4 +44,17 @@ export const deleteEmployeeInWorkspace = async (employeeId: string) => {
 
 export const updateEmployeeInWorkspace = async (employee: Partial<TEmployee>) => {
   await firestore().collection('Employees').doc(employee.id).update(employee);
+};
+
+export const addEmployeeWorkList = async (employeeId: string, workspaceId: string, data: TWorklist) => {
+  await firestore().collection('Employees').doc(employeeId).collection('WorkList').add({
+    workspaceId,
+    dateIn: data.dateIn,
+    dateOut: data.dateOut,
+  });
+};
+
+export const getEmployeeWorkList = async (employeeId: string) => {
+  const snapshot = await firestore().collection('Employees').doc(employeeId).collection('WorkList').get();
+  return snapshot.docs.map((doc) => doc.data() as TWorklist);
 };

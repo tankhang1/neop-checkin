@@ -58,6 +58,7 @@ const EmployeeDetailScreen = ({ route }: Props) => {
       { cancelable: false },
     );
   };
+
   const insets = useSafeAreaInsets();
   useEffect(() => {
     onGetEmployeeInfo();
@@ -80,7 +81,7 @@ const EmployeeDetailScreen = ({ route }: Props) => {
       />
       <View style={styles.body}>
         <ProfileCard employee={employee} onForceUpdate={onGetEmployeeInfo} />
-        <WorkLogList />
+        {employee?.id && <WorkLogList employeeId={employee.id} />}
       </View>
     </View>
   );

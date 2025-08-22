@@ -31,7 +31,10 @@ const ProfileCard = ({ employee, onForceUpdate }: TProfileCard) => {
   const { account, brandname } = useSelector((state: RootState) => state.app);
   const [openedEdit, setOpenedEdit] = React.useState(false);
   const onInvitationQrCode = () => {
-    navigationRef.navigate('InvitationQrCode');
+    navigationRef.navigate('InvitationQrCode', {
+      workspaceId: employee?.workspaceId || '',
+      employeeId: employee?.id || '',
+    });
   };
   const { control, setValue, handleSubmit } = useForm<FormValues>({
     defaultValues: {

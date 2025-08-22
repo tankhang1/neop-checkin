@@ -3,15 +3,16 @@ import AppContainer from '@/components/AppContainer/AppContainer';
 import AppHeader from '@/components/AppHeader';
 import { WIDTH } from '@/constants/device.constants';
 import { addUser } from '@/firebase/account.firebase';
-import { logout, setAccount } from '@/redux/slices/AppSlice';
+import { getWorkspacesByBandnameAndUserId } from '@/firebase/workspace.firebase';
+import { logout, setAccount, TWorkspace } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { s, vs } from '@/utils/theme/responsive';
-import { GoogleAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +22,8 @@ import WorkspaceItem from './components/WorkspaceItem';
 
 const AccountScreen = () => {
   const dispatch = useDispatch();
-  const { account, workspace } = useSelector((state: RootState) => state.app);
+  const [listWorkspace, setListWorkspace] = useState<TWorkspace[]>([]);
+  const { account, brandname } = useSelector((state: RootState) => state.app);
   const [isLoading, setIsLoading] = useState(false);
   const onContinueWithGoogle = async () => {
     try {
@@ -79,6 +81,10 @@ const AccountScreen = () => {
       setIsLoading(false);
     }
   };
+  const onGetListWorkspace = useCallback(async () => {
+    const data = await getWorkspacesByBandnameAndUserId(brandname, account?.id || '');
+    setListWorkspace(data);
+  }, [brandname, account?.id]);
   const onLogout = () => {
     Toast.show({
       type: 'success',
@@ -93,6 +99,11 @@ const AccountScreen = () => {
       webClientId: '401853115864-851msct03lbt8kn4i0cb4f12nqeq59u7.apps.googleusercontent.com',
     });
   }, []);
+  useEffect(() => {
+    if (account?.id) {
+      onGetListWorkspace();
+    }
+  }, [account?.id, onGetListWorkspace]);
   if (account) {
     return (
       <AppContainer isScroll={false} style={styles.container_account}>
@@ -108,8 +119,8 @@ const AccountScreen = () => {
           <View style={styles.gap12}>
             <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Workplace</Text>
             <View style={styles.card}>
-              {workspace?.map((ws) => (
-                <WorkspaceItem key={ws.id} label={ws.name} isDivider />
+              {listWorkspace?.map((ws, index) => (
+                <WorkspaceItem key={ws.id} label={ws.name} isDivider={index !== listWorkspace.length - 1} />
               ))}
               <TouchableOpacity style={styles.add_workspace}>
                 <ICONS.CORE.PLUS />
@@ -120,9 +131,9 @@ const AccountScreen = () => {
           <View style={styles.gap12}>
             <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Trash</Text>
             <View style={styles.card}>
-              {workspace?.map((ws) => (
+              {/* {workspace?.map((ws) => (
                 <WorkspaceItem key={ws.id} label={ws.name} isDivider />
-              ))}
+              ))} */}
             </View>
           </View>
         </ScrollView>

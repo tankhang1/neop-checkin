@@ -1,8 +1,13 @@
+import { getEmployeeWorkList } from '@/firebase/workspace.firebase';
+import { TWorklist } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { vs } from '@/utils/theme/responsive';
-import React from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+dayjs.extend(isoWeek);
 
 type TWorkLog = {
   date: string;
@@ -42,29 +47,65 @@ const WorkLogCard = ({ date, checkIn, checkOut, isActive }: TWorkLog) => (
   </View>
 );
 
-const WorkLogList = () => {
+type TWorkLogList = {
+  employeeId: string;
+};
+const WorkLogList = ({ employeeId }: TWorkLogList) => {
+  const [listWorklist, setListWorklist] = useState<TWorklist[]>([]);
+  const onGetWorkList = useCallback(async () => {
+    const data = await getEmployeeWorkList(employeeId);
+    setListWorklist(data);
+  }, [employeeId]);
+  const getWeekLabel = (value: Date) => {
+    const date = dayjs(value);
+    const now = dayjs();
+    if (date.isoWeek() === now.isoWeek() && date.year() === now.year()) {
+      return 'This week';
+    }
+    if (date.isoWeek() === now.subtract(1, 'week').isoWeek() && date.year() === now.subtract(1, 'week').year()) {
+      return 'Last week';
+    }
+    const start = date.startOf('isoWeek').format('MMM DD');
+    const end = date.endOf('isoWeek').format('MMM DD');
+    return `${start} - ${end}`;
+  };
+  const groupByWeek = useMemo(() => {
+    return listWorklist.reduce((acc, item) => {
+      const weekLabel = getWeekLabel(item.dateIn);
+      if (!acc[weekLabel]) {
+        acc[weekLabel] = [];
+      }
+      acc[weekLabel].push({
+        date: dayjs(item.dateIn).format('MMM DD, YYYY'),
+        checkIn: dayjs(item.dateIn).format('HH:mm'),
+        checkOut: item.dateOut ? dayjs(item.dateOut).format('HH:mm') : undefined,
+        isActive: true,
+      });
+      return acc;
+    }, {} as Record<string, TWorkLog[]>);
+  }, [listWorklist]);
+  useEffect(() => {
+    onGetWorkList();
+  }, [employeeId, onGetWorkList]);
   return (
     <ScrollView>
       <View style={styles.container}>
         {/* This week */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>This week</Text>
-          <FlatList
-            data={data.thisWeek}
-            keyExtractor={(item, index) => 'thisWeek-' + index}
-            renderItem={({ item, index }) => <WorkLogCard {...item} isActive={data.thisWeek.length - 1 !== index} />}
-          />
-        </View>
 
-        {/* Last week */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Last week</Text>
-          <FlatList
-            data={data.lastWeek}
-            keyExtractor={(item, index) => 'lastWeek-' + index}
-            renderItem={({ item, index }) => <WorkLogCard {...item} isActive={data.lastWeek.length - 1 !== index} />}
-          />
-        </View>
+        {Object.entries(groupByWeek).map(([weekLabel, workLogs]) => (
+          <View key={weekLabel} style={styles.section}>
+            <Text style={styles.sectionTitle}>{weekLabel}</Text>
+            {workLogs.map((log, index) => (
+              <WorkLogCard
+                key={`${weekLabel}-${index}`}
+                date={log.date}
+                checkIn={log.checkIn}
+                checkOut={log.checkOut}
+                isActive={index !== workLogs.length - 1}
+              />
+            ))}
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -75,6 +116,7 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: COLORS.white[1],
     padding: 16,
+    paddingBottom: 0,
     borderRadius: 10,
     marginBottom: 12,
   },

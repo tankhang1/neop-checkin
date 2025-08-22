@@ -3354,6 +3354,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNShare (12.2.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNSVG (15.12.1):
     - DoubleConversion
     - glog
@@ -3561,6 +3585,7 @@ DEPENDENCIES:
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNWorklets (from `../node_modules/react-native-worklets`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -3751,6 +3776,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNWorklets:
@@ -3861,6 +3888,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: db4aa231a90bdc4cea8b749ec68b168c8f747ec2
   RNReanimated: 24b8a5b54c499ac783c2c299aad4712002c03bb1
   RNScreens: da4e25611bd431c423b66ecf3aabb5b8b2e04e80
+  RNShare: ab084f9d8263ca16975544e0977aa4808c4c0462
   RNSVG: 680e961f640e381aab730a04b2371969686ed9f7
   RNWorklets: 32e63979c33291a69d4d8541d4425ab91763320e
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

@@ -3,7 +3,7 @@ import { collection, doc, getFirestore, setDoc } from '@react-native-firebase/fi
 
 export const addUser = async (user: TAccount) => {
   try {
-    const userRef = doc(collection(getFirestore(), 'users'), user.id);
+    const userRef = doc(collection(getFirestore(), 'Users'), user.id);
     await setDoc(userRef, user);
   } catch (error) {
     console.error('Error adding user:', error);
@@ -12,7 +12,7 @@ export const addUser = async (user: TAccount) => {
 
 export const updateUser = async (user: TAccount) => {
   try {
-    const userRef = doc(collection(getFirestore(), 'users'), user.id);
+    const userRef = doc(collection(getFirestore(), 'Users'), user.id);
     await setDoc(userRef, user, { merge: true });
   } catch (error) {
     console.error('Error updating user:', error);
@@ -21,7 +21,7 @@ export const updateUser = async (user: TAccount) => {
 
 export const deleteUser = async (userId: string) => {
   try {
-    const userRef = doc(collection(getFirestore(), 'users'), userId);
+    const userRef = doc(collection(getFirestore(), 'Users'), userId);
     await setDoc(userRef, { deleted: true }, { merge: true });
   } catch (error) {
     console.error('Error deleting user:', error);

@@ -28,7 +28,10 @@ type TAppNavigation = {
   };
   QrDisplay: undefined;
   QrGenerate: undefined;
-  InvitationQrCode: undefined;
+  InvitationQrCode: {
+    workspaceId: string;
+    employeeId?: string;
+  };
   CheckinQrCode: undefined;
   Main: NavigatorScreenParams<TBottomNavigation>;
 };

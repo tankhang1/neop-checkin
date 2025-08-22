@@ -5,7 +5,7 @@ const AppLoading = () => {
   return (
     <Portal>
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#3768EC" />
+        <ActivityIndicator size='large' color='#3768EC' />
       </View>
     </Portal>
   );

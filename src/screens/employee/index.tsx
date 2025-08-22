@@ -1,5 +1,6 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppHeader from '@/components/AppHeader';
+import AppLoading from '@/components/AppLoading';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
 import { getWorkspacesByBandnameAndUserId } from '@/firebase/workspace.firebase';
 import { navigationRef } from '@/navigation';
@@ -19,6 +20,7 @@ import Card from './components/Card';
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
   const { brandname, account } = useSelector((state: RootState) => state.app);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listWorkspace, setListWorkspace] = useState<TWorkspace[]>([]);
   const onCreateWorkplace = () => {
     navigationRef.navigate('CreateWorkplace');
@@ -38,15 +40,16 @@ const EmployeeScreen = () => {
     ]);
   };
   const onGetListWorkspace = useCallback(async () => {
+    setIsLoading(true);
     const workspaces = await getWorkspacesByBandnameAndUserId(brandname, account?.id);
     setListWorkspace(workspaces);
+    setIsLoading(false);
   }, [brandname, account?.id]);
   const isEmpty = useMemo(() => listWorkspace.length === 0, [listWorkspace]);
 
   useEffect(() => {
     onGetListWorkspace();
   }, [onGetListWorkspace]);
-
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
@@ -67,14 +70,14 @@ const EmployeeScreen = () => {
           </View>
         )}
       </View>
-      {!isEmpty && (
+      {!isEmpty && !isLoading && (
         <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
           {listWorkspace.map((item) => (
             <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} />
           ))}
         </View>
       )}
-      {isEmpty && (
+      {isEmpty && !isLoading && (
         <View style={styles.body}>
           <Text style={[FONTS.B34]}>Employees</Text>
           <View style={styles.empty_body}>
@@ -84,6 +87,7 @@ const EmployeeScreen = () => {
           </View>
         </View>
       )}
+      {isLoading && <AppLoading />}
     </View>
   );
 };
