@@ -80,7 +80,7 @@ android {
 
     namespace "com.neop_checkin"
     defaultConfig {
-        applicationId "com.neop_checkin"
+        applicationId "ca.neoprototype.checkinapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -13,7 +13,7 @@ import { TAppNavigation } from '@/utils/types/navigation.types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { LeafletView } from 'react-native-leaflet-view';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 import BottomLocation from './components/BottomLocation';
@@ -65,25 +65,22 @@ const LocationScreen = ({ route, navigation }: Props) => {
     <AppContainer isScroll={false} style={styles.container}>
       <AppHeader isGoBack backColor={COLORS.blue[1]} onBackPress={onGoBack} title='Location' />
       <View style={styles.body}>
-        <MapView
-          style={styles.container}
-          initialRegion={{
-            latitude: curLocation?.lat ? +curLocation.lat : 37.78825,
-            longitude: curLocation?.lon ? +curLocation.lon : -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}>
-          {curLocation && (
-            <Marker
-              coordinate={{
-                latitude: +curLocation.lat,
-                longitude: +curLocation.lon,
-              }}
-              title='Selected Location'
-              description={curLocation?.display_name || ''}
-            />
-          )}
-        </MapView>
+        <LeafletView
+          mapCenterPosition={{
+            lat: curLocation?.lat ? +curLocation.lat : 37.78825,
+            lng: curLocation?.lon ? +curLocation.lon : -122.4324,
+          }}
+          mapMarkers={[
+            {
+              position: {
+                lat: curLocation?.lat ? +curLocation.lat : 37.78825,
+                lng: curLocation?.lon ? +curLocation.lon : -122.4324,
+              },
+              icon: 'https://cdn-icons-png.flaticon.com/512/5860/5860579.png',
+            },
+          ]}
+          zoomControl={false}
+        />
         <View style={styles.search}>
           <AppAddressDropdown
             textProps={{
