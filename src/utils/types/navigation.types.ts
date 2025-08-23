@@ -1,3 +1,4 @@
+import { TGenerateQrCode } from '@/hooks/useQrCode';
 import { TSearchResult } from '@/hooks/useSearchLocation';
 import { TWorkspace } from '@/redux/slices/AppSlice';
 import { NavigatorScreenParams } from '@react-navigation/native';
@@ -6,15 +7,24 @@ type TAppNavigation = {
   // Public
   Login: undefined;
   Register: undefined;
-  TimeRunning: undefined;
+  TimeRunning: {
+    employeeId: string;
+    workId: string;
+  };
   EditProfile: undefined;
-  EmployeeHistory: undefined;
+  EmployeeHistory: {
+    employeeId: string;
+  };
 
   // Private
   Account: undefined;
   Auth: undefined;
-  Checkin: undefined;
-  CreateEmployee: undefined;
+  Checkin: {
+    data: TGenerateQrCode;
+  };
+  CreateEmployee: {
+    data: TGenerateQrCode;
+  };
   AddEmployeeToWorkplace: {
     workspaceId: string;
   };
@@ -27,7 +37,9 @@ type TAppNavigation = {
     workspace: string;
     location?: TSearchResult;
   };
-  QrDisplay: undefined;
+  QrDisplay: {
+    data?: TGenerateQrCode;
+  };
   QrGenerate: undefined;
   InvitationQrCode: {
     workspaceId: string;
@@ -37,6 +49,7 @@ type TAppNavigation = {
     workspace: TWorkspace;
   };
   Main: NavigatorScreenParams<TBottomNavigation>;
+  ScanScreen: undefined | { employeeId?: string };
 };
 type TBottomNavigation = {
   Employee: undefined;

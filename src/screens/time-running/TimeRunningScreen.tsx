@@ -1,16 +1,59 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDivider from '@/components/AppDivider/AppDivider';
+import { getEmployeeInfo, getWorklist, getWorkspace, updateEmployeeWorkList } from '@/firebase/workspace.firebase';
 import { navigationRef } from '@/navigation';
+import { TEmployee, TWorklist, TWorkspace } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { height, s, vs, width } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
-import React from 'react';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import dayjs from 'dayjs';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+type Props = NativeStackScreenProps<TAppNavigation, 'TimeRunning'>;
+const TimeRunningScreen = ({ route, navigation }: Props) => {
+  const employeeId = route.params?.employeeId;
+  const workId = route.params?.workId;
+  const [workspace, setWorkspace] = useState<TWorkspace | null>(null);
+  const [employee, setEmployee] = useState<TEmployee | null>(null);
+  const [worklist, setWorklist] = useState<TWorklist | null>(null);
 
-const TimeRunningScreen = () => {
+  const onGetWorkspace = async (workspaceId: string) => {
+    const data = await getWorkspace(workspaceId);
+    setWorkspace(data);
+  };
+  const onGetEmployee = useCallback(async () => {
+    if (employeeId) {
+      const data = (await getEmployeeInfo(employeeId)) as TEmployee;
+      setEmployee(data);
+      onGetWorkspace(data.workspaceId);
+    }
+  }, [employeeId]);
+  const onCheckout = async () => {
+    if (workId && employeeId) {
+      await updateEmployeeWorkList(employeeId, workId, { dateOut: new Date() });
+      navigation.pop(2);
+    }
+  };
+  const onWorkList = async () => {
+    navigationRef.navigate('EmployeeHistory', {
+      employeeId: employeeId!,
+    });
+  };
+  const onGetWorkList = useCallback(async () => {
+    if (workId && employeeId) {
+      const data = await getWorklist(employeeId, workId);
+      setWorklist(data);
+    }
+  }, [employeeId, workId]);
+  useEffect(() => {
+    onGetEmployee();
+    onGetWorkList();
+  }, [onGetEmployee, onGetWorkList]);
   return (
     <AppContainer isScroll={false}>
       <View style={styles.headerCont}>
@@ -18,7 +61,7 @@ const TimeRunningScreen = () => {
           <ICONS.CORE.CLOCK />
         </TouchableOpacity>
         <Text style={{ ...FONTS.M17, color: COLORS.blue[1] }}>Working</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onWorkList}>
           <ICONS.CORE.CLOCK />
         </TouchableOpacity>
       </View>
@@ -28,7 +71,7 @@ const TimeRunningScreen = () => {
           <View style={styles.avatarCont}>
             <Image
               source={{
-                uri: 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDM3fHx8ZW58MHx8fHx8',
+                uri: employee?.avatar || 'https://www.w3schools.com/howto/img_avatar.png',
               }}
               style={{ width: 120, height: 120, borderRadius: 100 }}
             />
@@ -38,9 +81,9 @@ const TimeRunningScreen = () => {
           </View>
 
           <View style={{ alignItems: 'center', marginBottom: vs(24) }}>
-            <Text style={{ ...FONTS.M17, color: COLORS.blue[1], marginBottom: vs(12) }}>Hugo B. Zigler</Text>
-            <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(8) }}>hugobzigler@gmail.com</Text>
-            <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(16) }}>310-919-4467</Text>
+            <Text style={{ ...FONTS.M17, color: COLORS.blue[1], marginBottom: vs(12) }}>{employee?.name}</Text>
+            <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(8) }}>{employee?.email}</Text>
+            <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(16) }}>{employee?.phone}</Text>
             <TouchableOpacity
               onPress={() => {
                 navigationRef.navigate('EditProfile');
@@ -51,8 +94,8 @@ const TimeRunningScreen = () => {
 
           <View style={styles.modalCont}>
             <View style={styles.modalTitle}>
-              <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>Apr 25, 2025</Text>
-              <Text style={{ ...FONTS.B34, color: COLORS.blue[1] }}>03 : 45</Text>
+              <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>{dayjs().format('MMM D, YYYY')}</Text>
+              <Text style={{ ...FONTS.B34, color: COLORS.blue[1] }}>{dayjs().format('HH:mm')}</Text>
             </View>
 
             <AppDivider style={{ width: width - THEME.PADDING_HORIZONTAL, marginBottom: vs(8) }} />
@@ -61,7 +104,7 @@ const TimeRunningScreen = () => {
               <ICONS.CORE.MAP_PIN />
               <View style={{ flex: 1, gap: vs(8) }}>
                 <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>Working at</Text>
-                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>966 Glen Ellyn, Illinois 60137, USA</Text>
+                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>{workspace?.name}</Text>
               </View>
             </View>
 
@@ -69,7 +112,7 @@ const TimeRunningScreen = () => {
               <ICONS.CORE.CLOCK_RIGHT />
               <View style={{ flex: 1, gap: vs(8) }}>
                 <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>Start time</Text>
-                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>08 : 55</Text>
+                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>{dayjs(worklist?.dateIn).format('HH:mm')}</Text>
               </View>
             </View>
 
@@ -77,9 +120,7 @@ const TimeRunningScreen = () => {
               buttonContainerStyle={{ width: width - THEME.PADDING_HORIZONTAL * 2, marginVertical: vs(47) }}
               buttonStyle={{ backgroundColor: '#DF6D14' }}
               label='Check Out'
-              onPress={() => {
-                navigationRef.navigate('EmployeeHistory');
-              }}
+              onPress={onCheckout}
             />
           </View>
         </ScrollView>

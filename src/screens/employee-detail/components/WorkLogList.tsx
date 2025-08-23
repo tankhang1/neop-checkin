@@ -16,22 +16,6 @@ type TWorkLog = {
   isActive: boolean;
 };
 
-const data = {
-  thisWeek: [
-    { date: 'Apr 24, 2025', checkIn: '08:57', checkOut: '17:00' },
-    { date: 'Apr 23, 2025', checkIn: '09:03', checkOut: '17:05' },
-    { date: 'Apr 22, 2025', checkIn: '09:01', checkOut: '17:02' },
-    { date: 'Apr 21, 2025', checkIn: '08:56', checkOut: '17:03' },
-  ],
-  lastWeek: [
-    { date: 'Apr 18, 2025', checkIn: '08:55', checkOut: '17:05' },
-    { date: 'Apr 17, 2025' }, // Off
-    { date: 'Apr 16, 2025', checkIn: '09:03', checkOut: '17:05' },
-    { date: 'Apr 15, 2025', checkIn: '09:01', checkOut: '17:02' },
-    { date: 'Apr 14, 2025', checkIn: '08:56', checkOut: '17:03' },
-  ],
-};
-
 const WorkLogCard = ({ date, checkIn, checkOut, isActive }: TWorkLog) => (
   <View style={[styles.item, !isActive && { borderBottomWidth: 0 }]}>
     <Text style={styles.date}>{date}</Text>
@@ -54,7 +38,15 @@ const WorkLogList = ({ employeeId }: TWorkLogList) => {
   const [listWorklist, setListWorklist] = useState<TWorklist[]>([]);
   const onGetWorkList = useCallback(async () => {
     const data = await getEmployeeWorkList(employeeId);
-    setListWorklist(data);
+    setListWorklist(
+      data.map((item) => ({
+        ...item,
+        //@ts-expect-error error
+        dateIn: item.dateIn?.toDate(),
+        //@ts-expect-error error
+        dateOut: item.dateOut?.toDate(),
+      })),
+    );
   }, [employeeId]);
   const getWeekLabel = (value: Date) => {
     const date = dayjs(value);

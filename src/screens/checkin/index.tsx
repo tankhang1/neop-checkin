@@ -7,10 +7,19 @@ import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { mvs, s, vs } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const index = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'Checkin'>;
+const CheckinScreen = ({ route }: Props) => {
+  const data = route.params?.data;
+  const onScan = async () => {
+    navigationRef.navigate('ScanScreen', {
+      employeeId: data?.employeeId || '',
+    });
+  };
   return (
     <AppContainer isScroll={false}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -33,7 +42,7 @@ const index = () => {
           <Image source={IMAGES.ILLUSTARTIONS.CHECKIN} style={styles.image} />
         </View>
       </ScrollView>
-      <AppButton buttonContainerStyle={styles.buttonCont} label='Scan' onPress={() => navigationRef.navigate('TimeRunning')} />
+      <AppButton buttonContainerStyle={styles.buttonCont} label='Scan' onPress={onScan} />
     </AppContainer>
   );
 };
@@ -61,4 +70,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-export default index;
+export default CheckinScreen;

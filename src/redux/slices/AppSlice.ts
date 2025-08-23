@@ -23,6 +23,7 @@ export type TEmployee = {
   phone: string;
   position: TPosition;
   status: TStatus;
+  avatar: string;
 };
 export type TAccount = {
   id: string;

@@ -4,8 +4,8 @@ import AppContainer from '@/components/AppContainer/AppContainer';
 import AppHeader from '@/components/AppHeader';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
 import { WIDTH } from '@/constants/device.constants';
-import { addUser, updateUser } from '@/firebase/account.firebase';
-import { getWorkspacesByBandnameAndUserId, updateWorkspace } from '@/firebase/workspace.firebase';
+import { updateUser } from '@/firebase/account.firebase';
+import { getAccountByEmail, getWorkspacesByBandnameAndUserId, updateWorkspace } from '@/firebase/workspace.firebase';
 import { navigationRef } from '@/navigation';
 import { logout, setAccount, setWorkspace, updateAccount } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
@@ -65,22 +65,20 @@ const AccountScreen = () => {
       // Sign-in the user with the credential
       const response = await signInWithCredential(getAuth(), googleCredential);
       setIsLoading(false);
-      dispatch(
-        setAccount({
-          id: response.user.uid,
-          email: response.user.email || '',
-          name: response.user.displayName || '',
-          url: response.user.photoURL || '',
-          phone: response.user.phoneNumber || '',
-        }),
-      );
-      addUser({
-        id: response.user.uid,
-        email: response.user.email || '',
-        name: response.user.displayName || '',
-        url: response.user.photoURL || '',
-        phone: response.user.phoneNumber || '',
-      });
+      const user = await getAccountByEmail(response.user.email || '');
+      if (user) {
+        dispatch(setAccount(user));
+      } else {
+        dispatch(
+          setAccount({
+            id: response.user.uid,
+            email: response.user.email || '',
+            name: response.user.displayName || '',
+            url: response.user.photoURL || '',
+            phone: response.user.phoneNumber || '',
+          }),
+        );
+      }
       workspace.forEach((ws) => {
         updateWorkspace(ws.id, {
           accountId: response.user.uid,

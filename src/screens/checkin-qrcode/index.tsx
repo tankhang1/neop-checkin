@@ -16,13 +16,15 @@ import { useSelector } from 'react-redux';
 type Props = NativeStackScreenProps<TAppNavigation, 'CheckinQrCode'>;
 const CheckinQrCodeScreen = ({ route }: Props) => {
   const workspace = route.params.workspace;
-  const { account } = useSelector((state: RootState) => state.app);
+  const { account, brandname } = useSelector((state: RootState) => state.app);
   const qrCode = useQrCode({
     timeout: 1000 * 60 * 5,
     type: 'workspace',
     workspaceId: workspace?.id,
     employeeId: '',
     userId: account?.id || '',
+    brand: brandname || '',
+    createdAt: Date.now(),
   });
   const onShareCode = () => {
     Share.open({
@@ -52,7 +54,7 @@ const CheckinQrCodeScreen = ({ route }: Props) => {
       <View style={styles.body}>
         <ICONS.CORE.PIN_LOCATION />
         <Text style={[FONTS.R17, styles.address]}>{workspace?.address}</Text>
-        <QRCode size={200} />
+        <QRCode value={qrCode} size={200} />
         <Text style={[FONTS.R48, { color: COLORS.blue[1], marginTop: vs(60) }]}>{qrCode}</Text>
       </View>
     </AppContainer>

@@ -1,23 +1,60 @@
 import AppButton from '@/components/AppButton/AppButton';
+import { getWorkspace } from '@/firebase/workspace.firebase';
+import { useQrCode } from '@/hooks/useQrCode';
 import { navigationRef } from '@/navigation';
+import { TWorkspace } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
-import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
+import Toast from 'react-native-toast-message';
 
-const QrDisplayScreen = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'QrDisplay'>;
+const QrDisplayScreen = ({ route }: Props) => {
+  const qrCode = route.params?.data;
+  const [workspace, setWorkspace] = useState<TWorkspace | null>(null);
+  const code = useQrCode({
+    brand: qrCode?.brand || '',
+    createdAt: Date.now(),
+    timeout: 1000 * 60,
+    type: 'checkin',
+    workspaceId: qrCode?.workspaceId || '',
+    employeeId: qrCode?.employeeId || '',
+    userId: qrCode?.userId || '',
+  });
+  const onGetWorkspace = useCallback(async () => {
+    if (!qrCode?.workspaceId) {
+      Toast.show({
+        type: 'error',
+        text1: 'Workspace not found',
+        text2: 'Please scan a valid QR code.',
+      });
+      return;
+    }
+    const data = await getWorkspace(qrCode?.workspaceId);
+    setWorkspace(data);
+  }, [qrCode?.workspaceId]);
+  useEffect(() => {
+    if (qrCode?.workspaceId) {
+      onGetWorkspace();
+    }
+  }, [qrCode?.workspaceId, onGetWorkspace]);
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
         <ICONS.CORE.MAP_PIN />
-        <Text style={{ ...FONTS.R17, color: COLORS.blue[1], marginTop: vs(12), marginBottom: vs(16) }}>
-          966 Glen Ellyn, Illinois 60137, USA
-        </Text>
-        <Text style={{ ...FONTS.M19, color: COLORS.blue[1] }}>Workplace</Text>
-        <Image source={IMAGES.CORE.QR_CODE} style={{ width: s(240), height: s(240) }} />
+        <Text style={styles.address}>{workspace?.address || ''}</Text>
+        <View style={styles.qrCode}>
+          <Text style={{ ...FONTS.M19, color: COLORS.blue[1] }}>Workplace</Text>
+          <QRCode value={code} size={s(220)} />
+          <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>{workspace?.brandname}</Text>
+        </View>
       </View>
       <View style={styles.buttonCont}>
         <AppButton
@@ -50,6 +87,18 @@ const styles = StyleSheet.create({
   buttonCont: {
     paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingBottom: vs(58),
+  },
+  address: {
+    ...FONTS.R17,
+    color: COLORS.blue[1],
+    marginTop: vs(12),
+    marginBottom: vs(16),
+    textAlign: 'center',
+  },
+  qrCode: {
+    gap: vs(30),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default QrDisplayScreen;

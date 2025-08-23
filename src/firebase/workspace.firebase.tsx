@@ -1,4 +1,4 @@
-import { TEmployee, TWorklist, TWorkspace } from '@/redux/slices/AppSlice';
+import { TAccount, TEmployee, TWorklist, TWorkspace } from '@/redux/slices/AppSlice';
 import firestore from '@react-native-firebase/firestore';
 
 export const createWorkspace = async (workspace: TWorkspace) => {
@@ -47,6 +47,13 @@ export const getEmployeeInfo = async (employeeId: string) => {
   const snapshot = await firestore().collection('Employees').doc(employeeId).get();
   return snapshot.data();
 };
+export const getAccountByEmail = async (email: string) => {
+  const snapshot = await firestore().collection('Users').where('email', '==', email).get();
+  if (!snapshot.empty) {
+    return snapshot.docs[0].data() as TAccount;
+  }
+  return null;
+};
 
 export const deleteEmployeeInWorkspace = async (employeeId: string) => {
   await firestore().collection('Employees').doc(employeeId).delete();
@@ -67,4 +74,13 @@ export const addEmployeeWorkList = async (employeeId: string, workspaceId: strin
 export const getEmployeeWorkList = async (employeeId: string) => {
   const snapshot = await firestore().collection('Employees').doc(employeeId).collection('WorkList').get();
   return snapshot.docs.map((doc) => doc.data() as TWorklist);
+};
+
+export const getWorklist = async (employeeId: string, workId: string) => {
+  const snapshot = await firestore().collection('Employees').doc(employeeId).collection('WorkList').doc(workId).get();
+  return snapshot.data() as TWorklist;
+};
+
+export const updateEmployeeWorkList = async (employeeId: string, workId: string, data: Partial<TWorklist>) => {
+  await firestore().collection('Employees').doc(employeeId).collection('WorkList').doc(workId).update(data);
 };

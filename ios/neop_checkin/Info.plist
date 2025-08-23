@@ -39,6 +39,8 @@
 	<array>
 		<string>arm64</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -67,10 +69,10 @@
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-	<string>fb</string>
-	<string>instagram</string>
-	<string>twitter</string>
-	<string>tiktoksharesdk</string>
+		<string>fb</string>
+		<string>instagram</string>
+		<string>twitter</string>
+		<string>tiktoksharesdk</string>
 	</array>
 </dict>
 </plist>

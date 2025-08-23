@@ -3,6 +3,7 @@ import AppContainer from '@/components/AppContainer/AppContainer';
 import AppDivider from '@/components/AppDivider/AppDivider';
 import AppSegmentControl from '@/components/AppSegmentControl/AppSegmentControl';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
+import { verifyCode } from '@/firebase/code.firebase';
 import { navigationRef } from '@/navigation';
 import { updateBrandName } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
@@ -13,6 +14,7 @@ import { height, s, vs, width } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
 import { useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { useDispatch } from 'react-redux';
 
 enum OPTION_ENUM {
@@ -65,7 +67,27 @@ const AuthScreen = () => {
       screen: 'Employee',
     });
   };
-
+  const onQrCodeDisplay = async () => {
+    if (oneTimePassword.length !== 6) {
+      Toast.show({
+        type: 'error',
+        text1: 'One Time Password must be 6 digits',
+      });
+      return;
+    }
+    const parsedCode = await verifyCode(oneTimePassword);
+    if (!parsedCode) {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid One Time Password',
+      });
+      return;
+    }
+    navigationRef.navigate('QrDisplay', { data: parsedCode });
+  };
+  const onStartCheckin = () => {
+    navigationRef.navigate('ScanScreen');
+  };
   return (
     <AppContainer withSafeArea={false}>
       <ScrollView
@@ -100,18 +122,13 @@ const AuthScreen = () => {
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(44) }]}>
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan your Invitation QRcode</Text>
-                  <AppButton
-                    label='Scan'
-                    onPress={() => {
-                      navigationRef.navigate('CreateEmployee');
-                    }}
-                  />
+                  <AppButton label='Scan' onPress={onStartCheckin} />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(32), gap: vs(20) }]}>
                   <AppButton
                     label='Scan'
                     onPress={() => {
-                      navigationRef.navigate('QrDisplay');
+                      navigationRef.navigate('QrDisplay', {});
                     }}
                   />
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Or input One Time Password</Text>
@@ -120,7 +137,7 @@ const AuthScreen = () => {
                     value={oneTimePassword}
                     onChangeText={setOneTimePassword}
                     rightSection={
-                      <TouchableOpacity disabled={!oneTimePassword}>
+                      <TouchableOpacity disabled={!oneTimePassword} onPress={onQrCodeDisplay}>
                         <Text style={{ ...FONTS.M17, color: COLORS.blue[5] }}>Submit</Text>
                       </TouchableOpacity>
                     }

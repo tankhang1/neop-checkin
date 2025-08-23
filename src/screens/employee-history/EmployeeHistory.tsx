@@ -1,83 +1,35 @@
 import AppContainer from '@/components/AppContainer/AppContainer';
-import { navigationRef } from '@/navigation';
+import AppHeader from '@/components/AppHeader';
+import { getEmployeeWorkList } from '@/firebase/workspace.firebase';
+import { TWorklist } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
-import { FONTS } from '@/utils/theme/fonts';
-import { ICONS } from '@/utils/theme/icons';
 import { s, vs, width } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TAppNavigation } from '@/utils/types/navigation.types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import WorkLogList from '../employee-detail/components/WorkLogList';
 
-const EmployeeHistory = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'EmployeeHistory'>;
+const EmployeeHistory = ({ route }: Props) => {
+  const employeeId = route.params?.employeeId;
+  const [listWorklist, setListWorklist] = useState<TWorklist[]>([]);
+  const onGetWorkList = useCallback(async () => {
+    if (employeeId) {
+      const data = await getEmployeeWorkList(employeeId);
+      setListWorklist(data);
+    }
+  }, [employeeId]);
+  useEffect(() => {
+    onGetWorkList();
+  }, [employeeId, onGetWorkList]);
   return (
     <AppContainer isScroll={false}>
-      <View style={styles.headerCont}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            navigationRef.goBack();
-          }}>
-          <ICONS.CORE.CHERVON_LEFT fill={COLORS.blue[5]} />
-          <Text style={[FONTS.R17, { color: COLORS.blue[5] }]}>Back</Text>
-        </TouchableOpacity>
-        <Text style={{ ...FONTS.M17, color: COLORS.blue[1] }}>Working</Text>
-        <TouchableOpacity>
-          <ICONS.CORE.CLOCK />
-        </TouchableOpacity>
-      </View>
+      <AppHeader title='Working' isGoBack />
 
       <View style={styles.body}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
-            <View style={styles.card}>
-              <Text style={{ ...FONTS.M17, color: COLORS.blue[1] }}>This week</Text>
-
-              {[...Array(4)].map(() => (
-                <View style={styles.cardRow}>
-                  <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>Apr 24, 2025</Text>
-
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: s(12) }}>
-                    <Text style={{ ...FONTS.R17, color: COLORS.green[2] }}>08 : 57</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.blue[3] }}>To</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.orange[1] }}>17 : 00</Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-
-            <View style={styles.card}>
-              <Text style={{ ...FONTS.M17, color: COLORS.blue[1] }}>Last week</Text>
-
-              {[...Array(4)].map(() => (
-                <View style={styles.cardRow}>
-                  <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>Apr 24, 2025</Text>
-
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: s(12) }}>
-                    <Text style={{ ...FONTS.R17, color: COLORS.green[2] }}>08 : 57</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.blue[3] }}>To</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.orange[1] }}>17 : 00</Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-
-            <View style={styles.card}>
-              <Text style={{ ...FONTS.M17, color: COLORS.blue[1] }}>07/04/2025 - 12/04/2025</Text>
-
-              {[...Array(4)].map(() => (
-                <View style={styles.cardRow}>
-                  <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>Apr 24, 2025</Text>
-
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: s(12) }}>
-                    <Text style={{ ...FONTS.R17, color: COLORS.green[2] }}>08 : 57</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.blue[3] }}>To</Text>
-                    <Text style={{ ...FONTS.R17, color: COLORS.orange[1] }}>17 : 00</Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-          </View>
-        </ScrollView>
+        <WorkLogList employeeId={employeeId} />
       </View>
     </AppContainer>
   );
@@ -104,7 +56,8 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: '#EBF2E8',
-    alignItems: 'center',
+    paddingHorizontal: s(16),
+    paddingTop: vs(16),
   },
   card: {
     backgroundColor: COLORS.white[1],

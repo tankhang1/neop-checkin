@@ -12,6 +12,7 @@ import LoginScreen from '@/screens/login/LoginScreen';
 import QrDisplayScreen from '@/screens/qr-display';
 import QrGenerateScreen from '@/screens/qr-generate';
 import RegisterScreen from '@/screens/register/RegisterScreen';
+import ScanScreen from '@/screens/scan';
 import TimeRunningScreen from '@/screens/time-running/TimeRunningScreen';
 import { TAppNavigation } from '@/utils/types/navigation.types';
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
@@ -50,7 +51,7 @@ const AppNavigation = () => {
           }}
         />
         <Stack.Screen name='CreateWorkplace' component={CreateWorkplaceScreen} />
-
+        <Stack.Screen name='ScanScreen' component={ScanScreen} />
         <Stack.Screen name='AddEmployeeToWorkplace' component={AddEmployeeToWorkplaceScreen} />
         <Stack.Screen
           name='InvitationQrCode'

@@ -3,6 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 
 export const addCode = async (code: string, data: TGenerateQrCode) => {
   try {
+    console.log('Adding code:', code, data);
     const cleanData = Object.fromEntries(
       Object.entries({ code, ...data }).map(([key, value]) => [key, value === undefined ? '' : value]),
     );
@@ -18,7 +19,7 @@ export const verifyCode = async (code: string) => {
     const codeRef = firestore().collection('Codes').doc(code);
     const codeSnapshot = await codeRef.get();
     if (codeSnapshot.exists()) {
-      return codeSnapshot.data();
+      return codeSnapshot.data() as TGenerateQrCode;
     } else {
       console.log('Code not found');
       return null;
