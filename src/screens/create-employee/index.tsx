@@ -62,7 +62,7 @@ const CreateEmployeeScreen = ({ route }: Props) => {
       id: employee?.id,
     });
     InteractionManager.runAfterInteractions(() => {
-      navigationRef.dispatch(StackActions.replace('Checkin'));
+      navigationRef.dispatch(StackActions.replace('Checkin', { employeeId: employee?.id }));
     });
   };
   const onGetEmployeeInfo = useCallback(async () => {
@@ -131,7 +131,13 @@ const CreateEmployeeScreen = ({ route }: Props) => {
 
             <View style={styles.formCont}>
               <FormInput control={control} name='email' placeholder='Input your email' label='Email' />
-              <FormInput control={control} name='phoneNumber' placeholder='Input your phone' label='Phone Number' />
+              <FormInput
+                control={control}
+                name='phoneNumber'
+                placeholder='Input your phone'
+                label='Phone Number'
+                keyboardType='numbers-and-punctuation'
+              />
             </View>
           </View>
         </ScrollView>

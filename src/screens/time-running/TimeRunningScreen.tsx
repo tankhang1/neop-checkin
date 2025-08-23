@@ -10,10 +10,13 @@ import { ICONS } from '@/utils/theme/icons';
 import { height, s, vs, width } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
 import { TAppNavigation } from '@/utils/types/navigation.types';
+import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import Timer from './components/Timmer';
 type Props = NativeStackScreenProps<TAppNavigation, 'TimeRunning'>;
 const TimeRunningScreen = ({ route, navigation }: Props) => {
   const employeeId = route.params?.employeeId;
@@ -21,7 +24,6 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
   const [workspace, setWorkspace] = useState<TWorkspace | null>(null);
   const [employee, setEmployee] = useState<TEmployee | null>(null);
   const [worklist, setWorklist] = useState<TWorklist | null>(null);
-
   const onGetWorkspace = async (workspaceId: string) => {
     const data = await getWorkspace(workspaceId);
     setWorkspace(data);
@@ -35,6 +37,11 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
   }, [employeeId]);
   const onCheckout = async () => {
     if (workId && employeeId) {
+      Toast.show({
+        type: 'success',
+        text1: 'Checkout Successful',
+        text2: 'You have successfully checked out',
+      });
       await updateEmployeeWorkList(employeeId, workId, { dateOut: new Date() });
       navigation.pop(2);
     }
@@ -50,10 +57,10 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
       setWorklist(data);
     }
   }, [employeeId, workId]);
-  useEffect(() => {
+  useFocusEffect(() => {
     onGetEmployee();
     onGetWorkList();
-  }, [onGetEmployee, onGetWorkList]);
+  });
   return (
     <AppContainer isScroll={false}>
       <View style={styles.headerCont}>
@@ -86,17 +93,14 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
             <Text style={{ ...FONTS.R17, color: COLORS.blue[2], marginBottom: vs(16) }}>{employee?.phone}</Text>
             <TouchableOpacity
               onPress={() => {
-                navigationRef.navigate('EditProfile');
+                navigationRef.navigate('EditProfile', { email: employee?.email, phone: employee?.phone, id: employee?.id! });
               }}>
               <Text style={{ ...FONTS.R17, color: COLORS.blue[5] }}>Edit profile</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.modalCont}>
-            <View style={styles.modalTitle}>
-              <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>{dayjs().format('MMM D, YYYY')}</Text>
-              <Text style={{ ...FONTS.B34, color: COLORS.blue[1] }}>{dayjs().format('HH:mm')}</Text>
-            </View>
+            <Timer />
 
             <AppDivider style={{ width: width - THEME.PADDING_HORIZONTAL, marginBottom: vs(8) }} />
 
@@ -112,7 +116,12 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
               <ICONS.CORE.CLOCK_RIGHT />
               <View style={{ flex: 1, gap: vs(8) }}>
                 <Text style={{ ...FONTS.R17, color: COLORS.blue[2] }}>Start time</Text>
-                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>{dayjs(worklist?.dateIn).format('HH:mm')}</Text>
+                <Text style={{ ...FONTS.R17, color: COLORS.blue[1] }}>
+                  {worklist?.dateIn
+                    ? //@ts-expect-error no check
+                      dayjs(worklist?.dateIn.toDate()).format('HH:mm')
+                    : '-'}
+                </Text>
               </View>
             </View>
 

@@ -38,7 +38,10 @@ export const getEmployeeInWorkspace = async (workspaceId: string) => {
   const snapshot = await firestore().collection('Employees').where('workspaceId', '==', workspaceId).get();
   return snapshot.docs.map((doc) => doc.data());
 };
-
+export const getAllEmployees = async () => {
+  const snapshot = await firestore().collection('Employees').get();
+  return snapshot.docs.map((doc) => doc.data() as TEmployee);
+};
 export const createEmployeeInWorkspace = async (employee: TEmployee) => {
   await firestore().collection('Employees').doc(employee.id).set(employee);
 };
@@ -63,12 +66,8 @@ export const updateEmployeeInWorkspace = async (employee: Partial<TEmployee>) =>
   await firestore().collection('Employees').doc(employee.id).update(employee);
 };
 
-export const addEmployeeWorkList = async (employeeId: string, workspaceId: string, data: TWorklist) => {
-  await firestore().collection('Employees').doc(employeeId).collection('WorkList').add({
-    workspaceId,
-    dateIn: data.dateIn,
-    dateOut: data.dateOut,
-  });
+export const addEmployeeWorkList = async (employeeId: string, data: TWorklist) => {
+  await firestore().collection('Employees').doc(employeeId).collection('WorkList').doc(data.id).set(data);
 };
 
 export const getEmployeeWorkList = async (employeeId: string) => {

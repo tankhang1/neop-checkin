@@ -75,7 +75,7 @@ const ScanScreen = ({ route }: Props) => {
         if (employee.status === 'Disable') {
           navigationRef.navigate('CreateEmployee', { data: data });
         } else {
-          navigationRef.navigate('Checkin', { data: data });
+          navigationRef.navigate('Checkin', { employeeId: data.employeeId });
         }
       } else {
         Toast.show({
@@ -86,14 +86,25 @@ const ScanScreen = ({ route }: Props) => {
       }
     }
     if (data.type === 'checkin') {
+      if (!route.params?.employeeId) {
+        Toast.show({
+          type: 'error',
+          text1: 'Verification Failed',
+          text2: 'Invalid employee ID',
+        });
+        return;
+      }
       const id = uuid();
 
-      await addEmployeeWorkList(route.params?.employeeId as string, data.workspaceId, {
+      await addEmployeeWorkList(route.params?.employeeId as string, {
+        id,
         dateIn: new Date(),
         dateOut: new Date(),
-        id,
       });
       navigationRef.navigate('TimeRunning', { employeeId: route.params?.employeeId!, workId: id });
+    }
+    if (data.type === 'workspace') {
+      navigationRef.navigate('QrDisplay', { data });
     }
     // Call your verification API here
   };

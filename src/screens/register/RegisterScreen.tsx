@@ -40,7 +40,13 @@ const RegisterScreen = () => {
           <View style={styles.formCont}>
             <FormInput control={control} name='fullName' label='Full Name' placeholder='Input your name' />
             <FormInput control={control} name='email' label='Email' placeholder='Input your email' />
-            <FormInput control={control} name='phoneNumber' label='Phone Number' placeholder='0123456789' />
+            <FormInput
+              control={control}
+              name='phoneNumber'
+              label='Phone Number'
+              placeholder='0123456789'
+              keyboardType='numbers-and-punctuation'
+            />
             <FormInput control={control} name='password' label='Password' secureTextEntry placeholder='******' />
           </View>
         </View>

@@ -1,4 +1,4 @@
-import { getEmployeeInWorkspace } from '@/firebase/workspace.firebase';
+import { getAllEmployees } from '@/firebase/workspace.firebase';
 import { setEmployees, TEmployee, TWorkspace } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
@@ -21,9 +21,13 @@ type TCard = {
 const Card = ({ workplace, search, onAddEmployee }: TCard) => {
   const { employees } = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
-  const isDownload = useMemo(() => employees.length > 1, [employees.length]);
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((item) => item.name.includes(search) && item.workspaceId === workplace.id);
+  }, [employees, search, workplace.id]);
+  const isDownload = useMemo(() => filteredEmployees.length > 1, [filteredEmployees.length]);
+
   const onGetListEmployee = useCallback(async () => {
-    const employees = await getEmployeeInWorkspace(workplace.id);
+    const employees = await getAllEmployees();
     if (employees.length > 0) {
       // Sort so that managers are on top
       const sorted = [...employees].sort((a, b) => {
@@ -33,7 +37,7 @@ const Card = ({ workplace, search, onAddEmployee }: TCard) => {
       });
       dispatch(setEmployees(sorted as TEmployee[]));
     }
-  }, [workplace.id, dispatch]);
+  }, [dispatch]);
   const onExportExcel = async () => {
     if (Platform.OS === 'android') {
       const isPermit = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
@@ -91,8 +95,8 @@ const Card = ({ workplace, search, onAddEmployee }: TCard) => {
         </View>
       </View>
       <View>
-        {employees
-          .filter((item) => item.name.includes(search))
+        {filteredEmployees
+          .filter((item) => item.name.includes(search) && item.workspaceId === workplace.id)
           .map((item, index) => (
             <CardItem
               key={item.id}
@@ -101,7 +105,7 @@ const Card = ({ workplace, search, onAddEmployee }: TCard) => {
               name={item.name}
               role={item.position}
               status={item.status}
-              isDivider={index !== employees.length - 1}
+              isDivider={index !== filteredEmployees.length - 1}
             />
           ))}
       </View>

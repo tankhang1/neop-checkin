@@ -1,5 +1,6 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
+import { updateEmployeeInWorkspace } from '@/firebase/workspace.firebase';
 import FormInput from '@/form/form-input/FormInput';
 import { navigationRef } from '@/navigation';
 import { CreateEmployeeInput, createEmployeeSchema } from '@/schemas/create-employee.schema';
@@ -8,25 +9,44 @@ import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { vs } from '@/utils/theme/responsive';
 import { THEME } from '@/utils/theme/theme';
+import { TAppNavigation } from '@/utils/types/navigation.types';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
-const EditProfileScreen = () => {
+type Props = NativeStackScreenProps<TAppNavigation, 'EditProfile'>;
+const EditProfileScreen = ({ route }: Props) => {
+  const phone = route.params?.phone;
+  const email = route.params?.email;
+  const id = route.params?.id;
+
   // FORM
   const { control, handleSubmit, setError, reset } = useForm<CreateEmployeeInput>({
     resolver: yupResolver(createEmployeeSchema),
-    defaultValues: createEmployeeSchema.getDefault(),
+    defaultValues: {
+      email: email || '',
+      phoneNumber: phone || '',
+    },
     mode: 'onSubmit',
     //reValidateMode: 'onSubmit',
   });
 
   // METHOD
   const onSubmit = async (data: CreateEmployeeInput) => {
-    // InteractionManager.runAfterInteractions(() => {
-    //   navigationRef.dispatch(StackActions.replace('Checkin'));
-    // });
+    console.log('data', data);
+    await updateEmployeeInWorkspace({
+      id,
+      email: data.email,
+      phone: data.phoneNumber,
+    });
+    Toast.show({
+      type: 'success',
+      text1: 'Update Successful',
+      text2: 'Your profile has been updated successfully',
+    });
     navigationRef.goBack();
   };
   return (
@@ -49,7 +69,13 @@ const EditProfileScreen = () => {
 
           <View style={styles.formCont}>
             <FormInput control={control} name='email' placeholder='Input your email' label='Email' />
-            <FormInput control={control} name='phoneNumber' placeholder='Input your phone' label='Phone Number' />
+            <FormInput
+              control={control}
+              name='phoneNumber'
+              placeholder='Input your phone'
+              label='Phone Number'
+              keyboardType='numbers-and-punctuation'
+            />
           </View>
         </ScrollView>
 

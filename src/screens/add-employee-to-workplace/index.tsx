@@ -55,6 +55,7 @@ const AddEmployeeToWorkplaceScreen = ({ route }: Props) => {
         id,
         status: data.position === 'Manager' ? 'Working' : 'Disable',
         workspaceId: route.params.workspaceId,
+        avatar: '',
       }),
     );
     createEmployeeInWorkspace({
@@ -65,6 +66,7 @@ const AddEmployeeToWorkplaceScreen = ({ route }: Props) => {
       id,
       status: data.position === 'Manager' ? 'Working' : 'Disable',
       workspaceId: route.params.workspaceId,
+      avatar: '',
     });
     Toast.show({
       type: 'success',
@@ -125,7 +127,13 @@ const AddEmployeeToWorkplaceScreen = ({ route }: Props) => {
             rules={{ required: 'Phone number is required' }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <View>
-                <AppTextInput label='Phone number' placeholder='0123456789' value={value} onChangeText={onChange} />
+                <AppTextInput
+                  label='Phone number'
+                  placeholder='0123456789'
+                  value={value}
+                  onChangeText={onChange}
+                  keyboardType='numbers-and-punctuation'
+                />
                 {error && <Text style={styles.error}>{error.message}</Text>}
               </View>
             )}

@@ -37,6 +37,7 @@ export type TState = {
   workspace: TWorkspace[];
   employees: TEmployee[];
   account: TAccount | null;
+  employeeId?: string;
 };
 
 const initialState: TState = {
@@ -44,6 +45,7 @@ const initialState: TState = {
   brandname: '',
   workspace: [],
   employees: [],
+  employeeId: undefined,
 };
 
 const appSlice = createSlice({
@@ -55,6 +57,9 @@ const appSlice = createSlice({
     },
     setAccount: (state, action: PayloadAction<TAccount>) => {
       state.account = action.payload;
+    },
+    updateEmployeeId: (state, action: PayloadAction<string | undefined>) => {
+      state.employeeId = action.payload;
     },
     updateAccount: (state, action: PayloadAction<Partial<TAccount>>) => {
       const cleanedData = Object.fromEntries(Object.entries(action.payload).filter(([_, v]) => v != undefined));
@@ -96,6 +101,7 @@ export const {
   updateAccount,
   deleteEmployee,
   deleteWorkspace,
+  updateEmployeeId,
   logout,
 } = appSlice.actions;
 export default appSlice.reducer;

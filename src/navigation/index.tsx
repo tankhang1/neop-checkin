@@ -1,3 +1,4 @@
+import { RootState } from '@/redux/store';
 import AddEmployeeToWorkplaceScreen from '@/screens/add-employee-to-workplace';
 import AuthScreen from '@/screens/auth';
 import CheckinScreen from '@/screens/checkin';
@@ -17,12 +18,13 @@ import TimeRunningScreen from '@/screens/time-running/TimeRunningScreen';
 import { TAppNavigation } from '@/utils/types/navigation.types';
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
 import BottomNavigation from './bottom.navigation';
 
 const Stack = createNativeStackNavigator<TAppNavigation>();
 export const navigationRef = createNavigationContainerRef<TAppNavigation>();
-
 const AppNavigation = () => {
+  const { employeeId } = useSelector((state: RootState) => state.app);
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
@@ -31,7 +33,8 @@ const AppNavigation = () => {
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
           gestureDirection: 'horizontal',
-        }}>
+        }}
+        initialRouteName={employeeId ? 'Checkin' : 'Auth'}>
         <Stack.Screen name='Auth' component={AuthScreen} />
         <Stack.Screen name='Checkin' component={CheckinScreen} />
         <Stack.Screen name='TimeRunning' component={TimeRunningScreen} />

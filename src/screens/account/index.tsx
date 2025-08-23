@@ -246,6 +246,7 @@ const AccountScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     value={value}
+                    keyboardType='numbers-and-punctuation'
                   />
                   {error && <Text style={styles.error}>{error.message}</Text>}
                 </View>

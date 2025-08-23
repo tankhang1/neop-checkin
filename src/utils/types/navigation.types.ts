@@ -11,7 +11,11 @@ type TAppNavigation = {
     employeeId: string;
     workId: string;
   };
-  EditProfile: undefined;
+  EditProfile: {
+    email?: string;
+    phone?: string;
+    id: string;
+  };
   EmployeeHistory: {
     employeeId: string;
   };
@@ -20,7 +24,7 @@ type TAppNavigation = {
   Account: undefined;
   Auth: undefined;
   Checkin: {
-    data: TGenerateQrCode;
+    employeeId: string;
   };
   CreateEmployee: {
     data: TGenerateQrCode;

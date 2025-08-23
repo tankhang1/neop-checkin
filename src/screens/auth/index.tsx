@@ -85,9 +85,10 @@ const AuthScreen = () => {
     }
     navigationRef.navigate('QrDisplay', { data: parsedCode });
   };
-  const onStartCheckin = () => {
+  const onStartScan = () => {
     navigationRef.navigate('ScanScreen');
   };
+
   return (
     <AppContainer withSafeArea={false}>
       <ScrollView
@@ -122,15 +123,10 @@ const AuthScreen = () => {
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(44) }]}>
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Scan your Invitation QRcode</Text>
-                  <AppButton label='Scan' onPress={onStartCheckin} />
+                  <AppButton label='Scan' onPress={onStartScan} />
                 </View>
                 <View style={[styles.bottomCont, { paddingVertical: vs(32), gap: vs(20) }]}>
-                  <AppButton
-                    label='Scan'
-                    onPress={() => {
-                      navigationRef.navigate('QrDisplay', {});
-                    }}
-                  />
+                  <AppButton label='Scan' onPress={onStartScan} />
                   <Text style={{ ...FONTS.R17, color: COLORS.blue[1], textAlign: 'center' }}>Or input One Time Password</Text>
                   <AppTextInput
                     placeholder='Input number'

@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white[1],
     paddingHorizontal: 20,
+    gap: vs(20),
   },
   image: {
     width: s(320),

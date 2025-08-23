@@ -39,13 +39,15 @@ const WorkLogList = ({ employeeId }: TWorkLogList) => {
   const onGetWorkList = useCallback(async () => {
     const data = await getEmployeeWorkList(employeeId);
     setListWorklist(
-      data.map((item) => ({
-        ...item,
-        //@ts-expect-error error
-        dateIn: item.dateIn?.toDate(),
-        //@ts-expect-error error
-        dateOut: item.dateOut?.toDate(),
-      })),
+      data
+        .map((item) => ({
+          ...item,
+          //@ts-expect-error error
+          dateIn: item.dateIn?.toDate(),
+          //@ts-expect-error error
+          dateOut: item.dateOut?.toDate(),
+        }))
+        .sort((a, b) => b.dateIn - a.dateIn), // Sort descending by dateIn
     );
   }, [employeeId]);
   const getWeekLabel = (value: Date) => {

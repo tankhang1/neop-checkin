@@ -58,7 +58,9 @@ const EmployeeDetailScreen = ({ route }: Props) => {
       { cancelable: false },
     );
   };
-
+  const onEmployeeHistory = () => {
+    navigationRef.navigate('EmployeeHistory', { employeeId: employeeId! });
+  };
   const insets = useSafeAreaInsets();
   useEffect(() => {
     onGetEmployeeInfo();
@@ -70,7 +72,7 @@ const EmployeeDetailScreen = ({ route }: Props) => {
         title={employee ? employee.name : '-'}
         rightSection={
           <View style={[styles.rows, styles.pr20]}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onEmployeeHistory}>
               <ICONS.CORE.CALENDAR />
             </TouchableOpacity>
             <TouchableOpacity onPress={onDeleteEmployee}>
