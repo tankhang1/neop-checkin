@@ -1,20 +1,27 @@
 import { getEmployeeInWorkspace } from '@/firebase/workspace.firebase';
-import { TEmployee, TWorkspace } from '@/redux/slices/AppSlice';
+import { setEmployees, TEmployee, TWorkspace } from '@/redux/slices/AppSlice';
+import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { s, vs } from '@/utils/theme/responsive';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as RNFS from '@dr.pogodin/react-native-fs';
+import { useCallback, useEffect, useMemo } from 'react';
+import { PermissionsAndroid, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Share from 'react-native-share';
+import Toast from 'react-native-toast-message';
+import { useDispatch, useSelector } from 'react-redux';
+import XLSX from 'xlsx';
 import CardItem from './CardItem';
-
 type TCard = {
   workplace: TWorkspace;
+  search: string;
   onAddEmployee?: () => void;
 };
-const Card = ({ workplace, onAddEmployee }: TCard) => {
-  const [listEmployee, setListEmployee] = useState<TEmployee[]>([]);
-  const isDownload = useMemo(() => listEmployee.length > 1, [listEmployee.length]);
+const Card = ({ workplace, search, onAddEmployee }: TCard) => {
+  const { employees } = useSelector((state: RootState) => state.app);
+  const dispatch = useDispatch();
+  const isDownload = useMemo(() => employees.length > 1, [employees.length]);
   const onGetListEmployee = useCallback(async () => {
     const employees = await getEmployeeInWorkspace(workplace.id);
     if (employees.length > 0) {
@@ -24,9 +31,47 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
         if (a.position !== 'Manager' && b.position === 'Manager') return 1;
         return 0;
       });
-      setListEmployee(sorted as TEmployee[]);
+      dispatch(setEmployees(sorted as TEmployee[]));
     }
-  }, [workplace.id]);
+  }, [workplace.id, dispatch]);
+  const onExportExcel = async () => {
+    if (Platform.OS === 'android') {
+      const isPermit = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+      if (!isPermit) {
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          Toast.show({
+            type: 'error',
+            text1: 'Permission Denied',
+            text2: 'Storage permission is required to export Excel file',
+          });
+          return;
+        }
+      }
+    }
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(employees);
+    XLSX.utils.book_append_sheet(wb, ws, 'Employees');
+    const path =
+      Platform.OS === 'ios'
+        ? `${RNFS.DocumentDirectoryPath}/employees.xlsx`
+        : `${RNFS.ExternalStorageDirectoryPath}/employees.xlsx`;
+
+    if (Platform.OS === 'ios') {
+      await Share.open({
+        url: 'file://' + path,
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        filename: 'employees',
+      });
+    }
+
+    console.log('Success');
+    Toast.show({
+      type: 'success',
+      text1: 'Export Successful',
+      text2: 'Employees exported to Excel successfully',
+    });
+  };
   useEffect(() => {
     onGetListEmployee();
   }, [onGetListEmployee]);
@@ -36,7 +81,7 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
         <Text style={[FONTS.M19, { color: COLORS.blue[1] }]}>{workplace.name}</Text>
         <View style={styles.actions}>
           {isDownload && (
-            <TouchableOpacity onPress={onAddEmployee}>
+            <TouchableOpacity onPress={onExportExcel}>
               <ICONS.CORE.DOWNLOAD color={COLORS.blue[5]} />
             </TouchableOpacity>
           )}
@@ -46,17 +91,19 @@ const Card = ({ workplace, onAddEmployee }: TCard) => {
         </View>
       </View>
       <View>
-        {listEmployee.map((item, index) => (
-          <CardItem
-            key={item.id}
-            id={item.id}
-            workspaceId={workplace.id}
-            name={item.name}
-            role={item.position}
-            status={item.status}
-            isDivider={index !== listEmployee.length - 1}
-          />
-        ))}
+        {employees
+          .filter((item) => item.name.includes(search))
+          .map((item, index) => (
+            <CardItem
+              key={item.id}
+              id={item.id}
+              workspaceId={workplace.id}
+              name={item.name}
+              role={item.position}
+              status={item.status}
+              isDivider={index !== employees.length - 1}
+            />
+          ))}
       </View>
     </View>
   );

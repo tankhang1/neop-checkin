@@ -6,6 +6,17 @@ export const createWorkspace = async (workspace: TWorkspace) => {
 };
 export const deleteWorkspace = async (workspaceId: string) => {
   await firestore().collection('Workspaces').doc(workspaceId).delete();
+  await firestore()
+    .collection('Employees')
+    .where('workspaceId', '==', workspaceId)
+    .get()
+    .then((snapshot) => {
+      const batch = firestore().batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      return batch.commit();
+    });
 };
 export const updateWorkspace = async (workspaceId: string, data: Partial<TWorkspace>) => {
   await firestore().collection('Workspaces').doc(workspaceId).update(data);
@@ -17,11 +28,10 @@ export const getWorkspace = async (workspaceId: string) => {
 
 export const getWorkspacesByBandnameAndUserId = async (brandname: string, userId?: string) => {
   const query = firestore().collection('Workspaces').where('brandname', '==', brandname);
-  if (userId) {
-    query.where('userId', '==', userId);
-  }
+
   const snapshot = await query.get();
-  return snapshot.docs.map((doc) => doc.data() as TWorkspace);
+  if (userId) return snapshot.docs.map((doc) => doc.data() as TWorkspace).filter((ws) => ws.accountId === userId);
+  return snapshot.docs.map((doc) => doc.data() as TWorkspace).filter((ws) => !ws.accountId);
 };
 
 export const getEmployeeInWorkspace = async (workspaceId: string) => {

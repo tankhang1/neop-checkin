@@ -1,4 +1,5 @@
 import { TSearchResult } from '@/hooks/useSearchLocation';
+import { TWorkspace } from '@/redux/slices/AppSlice';
 import { NavigatorScreenParams } from '@react-navigation/native';
 
 type TAppNavigation = {
@@ -32,7 +33,9 @@ type TAppNavigation = {
     workspaceId: string;
     employeeId?: string;
   };
-  CheckinQrCode: undefined;
+  CheckinQrCode: {
+    workspace: TWorkspace;
+  };
   Main: NavigatorScreenParams<TBottomNavigation>;
 };
 type TBottomNavigation = {

@@ -55,6 +55,10 @@ const appSlice = createSlice({
     setAccount: (state, action: PayloadAction<TAccount>) => {
       state.account = action.payload;
     },
+    updateAccount: (state, action: PayloadAction<Partial<TAccount>>) => {
+      const cleanedData = Object.fromEntries(Object.entries(action.payload).filter(([_, v]) => v != undefined));
+      if (state.account) state.account = { ...state.account, ...cleanedData };
+    },
     setWorkspace: (state, action: PayloadAction<TWorkspace[]>) => {
       state.workspace = action.payload;
     },
@@ -88,6 +92,7 @@ export const {
   setEmployees,
   addWorkspace,
   addEmployee,
+  updateAccount,
   deleteEmployee,
   deleteWorkspace,
   logout,

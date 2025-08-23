@@ -4,24 +4,26 @@ import AppLoading from '@/components/AppLoading';
 import AppTextInput from '@/components/AppTextInput/AppTextInput';
 import { getWorkspacesByBandnameAndUserId } from '@/firebase/workspace.firebase';
 import { navigationRef } from '@/navigation';
-import { TWorkspace } from '@/redux/slices/AppSlice';
+import { setWorkspace } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from './components/Card';
 
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
-  const { brandname, account } = useSelector((state: RootState) => state.app);
+  const { brandname, account, workspace } = useSelector((state: RootState) => state.app);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [listWorkspace, setListWorkspace] = useState<TWorkspace[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const deferredSearch = useDeferredValue(search);
+  const dispatch = useDispatch();
   const onCreateWorkplace = () => {
     navigationRef.navigate('CreateWorkplace');
   };
@@ -42,10 +44,10 @@ const EmployeeScreen = () => {
   const onGetListWorkspace = useCallback(async () => {
     setIsLoading(true);
     const workspaces = await getWorkspacesByBandnameAndUserId(brandname, account?.id);
-    setListWorkspace(workspaces);
+    dispatch(setWorkspace(workspaces));
     setIsLoading(false);
-  }, [brandname, account?.id]);
-  const isEmpty = useMemo(() => listWorkspace.length === 0, [listWorkspace]);
+  }, [brandname, account?.id, dispatch]);
+  const isEmpty = useMemo(() => workspace.length === 0, [workspace]);
 
   useEffect(() => {
     onGetListWorkspace();
@@ -57,7 +59,7 @@ const EmployeeScreen = () => {
           isGoBack
           rightSection={
             !isEmpty ? (
-              <TouchableOpacity style={{ paddingRight: s(14) }}>
+              <TouchableOpacity style={{ paddingRight: s(14) }} onPress={onCreateWorkplace}>
                 <ICONS.CORE.ADD_WORKPLACE fill={COLORS.blue[5]} />
               </TouchableOpacity>
             ) : null
@@ -66,14 +68,20 @@ const EmployeeScreen = () => {
         {!isEmpty && (
           <View style={styles.search}>
             <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>
-            <AppTextInput containerInputStyle={{ gap: s(8) }} leftSection={<ICONS.CORE.SEARCH />} placeholder='Search' />
+            <AppTextInput
+              containerInputStyle={{ gap: s(8) }}
+              leftSection={<ICONS.CORE.SEARCH />}
+              placeholder='Search'
+              defaultValue={search}
+              onChangeText={setSearch}
+            />
           </View>
         )}
       </View>
       {!isEmpty && !isLoading && (
         <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
-          {listWorkspace.map((item) => (
-            <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} />
+          {workspace.map((item) => (
+            <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} search={deferredSearch} />
           ))}
         </View>
       )}

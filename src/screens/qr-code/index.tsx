@@ -1,19 +1,36 @@
 import AppButton from '@/components/AppButton/AppButton';
 import AppContainer from '@/components/AppContainer/AppContainer';
 import AppHeader from '@/components/AppHeader';
-import AppTextInput from '@/components/AppTextInput/AppTextInput';
+import AppWorkspaceDropdown from '@/components/AppWorkspaceDropdown';
 import { navigationRef } from '@/navigation';
-import { COLORS } from '@/utils/theme/colors';
+import { TWorkspace } from '@/redux/slices/AppSlice';
+import { RootState } from '@/redux/store';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
+import { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
 
 const QrCodeScreen = () => {
+  const [selectedWorkspace, setSelectedWorkspace] = useState<TWorkspace | null>(null);
+  const { account, brandname } = useSelector((state: RootState) => state.app);
   const onGenerate = () => {
     // Handle QR code generation logic here
-    navigationRef.navigate('CheckinQrCode');
+    if (!selectedWorkspace) {
+      // Show an error message or handle the case when no workspace is selected
+      Toast.show({
+        type: 'error',
+        text1: 'Workspace not selected',
+        text2: 'Please select a workspace to generate the QR code.',
+      });
+      return;
+    }
+    navigationRef.navigate('CheckinQrCode', {
+      workspace: selectedWorkspace,
+    });
   };
   return (
     <AppContainer isScroll={false} style={{ flex: 1 }}>
@@ -24,13 +41,19 @@ const QrCodeScreen = () => {
           source={IMAGES.CORE.PIN_LOCATION}
           style={{ marginTop: vs(40), marginBottom: vs(40), height: vs(230), resizeMode: 'contain' }}
         />
-        <AppTextInput
-          label='Workplace'
-          placeholder='Select'
-          rightSection={<ICONS.CORE.PIN_LOCATION color={COLORS.blue[5]} />}
-          containerInputStyle={{ width: '100%', marginBottom: vs(40) }}
+
+        <AppWorkspaceDropdown
+          accountId={account?.id || ''}
+          brandname={brandname || ''}
+          textProps={{
+            label: 'Workplace',
+            placeholder: 'Select',
+            rightSection: <ICONS.CORE.PIN_LOCATION color='#3366FF' />,
+            containerInputStyle: { width: '100%' },
+          }}
+          onCallback={setSelectedWorkspace}
         />
-        <AppButton onPress={onGenerate} label='Generate' buttonContainerStyle={{ width: '100%' }} />
+        <AppButton onPress={onGenerate} label='Generate' buttonContainerStyle={{ width: '100%', marginTop: vs(40) }} />
       </View>
     </AppContainer>
   );

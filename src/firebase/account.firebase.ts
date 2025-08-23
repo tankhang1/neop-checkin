@@ -10,7 +10,7 @@ export const addUser = async (user: TAccount) => {
   }
 };
 
-export const updateUser = async (user: TAccount) => {
+export const updateUser = async (user: Partial<TAccount>) => {
   try {
     const userRef = doc(collection(getFirestore(), 'Users'), user.id);
     await setDoc(userRef, user, { merge: true });

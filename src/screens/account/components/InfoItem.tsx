@@ -4,14 +4,24 @@ import { s } from '@/utils/theme/responsive';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const InfoItem = ({ icon, label, isDivider }: { icon: React.ReactNode; label: string; isDivider?: boolean }) => {
+const InfoItem = ({
+  icon,
+  label,
+  isDivider,
+  onEdit,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  isDivider?: boolean;
+  onEdit: () => void;
+}) => {
   return (
     <View style={[styles.container, isDivider && styles.divider]}>
       <View style={styles.iconContainer}>
         {icon}
         <Text style={styles.label}>{label}</Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onEdit}>
         <Text style={styles.editButton}>Edit</Text>
       </TouchableOpacity>
     </View>

@@ -17,7 +17,7 @@ const InvitationQrCodeScreen = ({ route }: Props) => {
   const workspaceId = route.params?.workspaceId || '';
   const employeeId = route.params?.employeeId || '';
   const qrCode = useQrCode({
-    timeout: 60 * 60 * 24,
+    timeout: 1000 * 60 * 60 * 24,
     type: 'invitation',
     workspaceId,
     employeeId,

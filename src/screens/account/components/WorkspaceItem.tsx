@@ -1,11 +1,15 @@
-import { deleteWorkspace } from '@/firebase/workspace.firebase';
+import { deleteWorkspace as deleteWorkspaceStore } from '@/firebase/workspace.firebase';
+import { deleteWorkspace } from '@/redux/slices/AppSlice';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { s } from '@/utils/theme/responsive';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { useDispatch } from 'react-redux';
 
 const WorkspaceItem = ({ label, isDivider, workspaceId }: { label: string; isDivider?: boolean; workspaceId: string }) => {
+  const dispatch = useDispatch();
   const onDeleteWorkspace = () => {
     Alert.alert('Delete Workspace', 'Are you sure you want to delete this workspace?', [
       {
@@ -15,7 +19,13 @@ const WorkspaceItem = ({ label, isDivider, workspaceId }: { label: string; isDiv
       {
         text: 'Delete',
         onPress: async () => {
-          await deleteWorkspace(workspaceId);
+          await deleteWorkspaceStore(workspaceId);
+          dispatch(deleteWorkspace(workspaceId));
+          Toast.show({
+            type: 'success',
+            text1: 'Workspace deleted',
+            text2: 'The workspace has been deleted successfully',
+          });
         },
       },
     ]);
