@@ -16,10 +16,11 @@ import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from './components/Card';
+import Guide from './components/Guide';
 
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
-  const { brandname, account, workspace, employees } = useSelector((state: RootState) => state.app);
+  const { brandname, account, workspace, employees, isFirstTimeWorkspace } = useSelector((state: RootState) => state.app);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const deferredSearch = useDeferredValue(search);
@@ -52,6 +53,36 @@ const EmployeeScreen = () => {
   useEffect(() => {
     onGetListWorkspace();
   }, [onGetListWorkspace]);
+  if (isFirstTimeWorkspace) {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.header, { paddingTop: insets.top }]}>
+          <AppHeader
+            isGoBack
+            rightSection={
+              <TouchableOpacity style={{ paddingRight: s(14) }} onPress={onCreateWorkplace}>
+                <ICONS.CORE.ADD_WORKPLACE fill={COLORS.blue[5]} />
+              </TouchableOpacity>
+            }
+          />
+          <View style={styles.search}>
+            <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>
+            <AppTextInput
+              containerInputStyle={{ gap: s(8), paddingVertical: vs(8) }}
+              leftSection={<ICONS.CORE.SEARCH />}
+              placeholder='Search'
+              defaultValue={search}
+              onChangeText={setSearch}
+            />
+          </View>
+        </View>
+        {!isLoading && <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}></View>}
+
+        {isLoading && <AppLoading />}
+        {!isLoading && <Guide />}
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top }]}>

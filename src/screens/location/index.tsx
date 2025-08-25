@@ -5,7 +5,7 @@ import { createWorkspace } from '@/firebase/workspace.firebase';
 import { TSearchResult } from '@/hooks/useSearchLocation';
 import { uuid } from '@/hooks/uuid';
 import { navigationRef } from '@/navigation';
-import { addWorkspace } from '@/redux/slices/AppSlice';
+import { addWorkspace, updateFirstTimeWorkspace } from '@/redux/slices/AppSlice';
 import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { ICONS } from '@/utils/theme/icons';
@@ -21,7 +21,7 @@ import BottomLocation from './components/BottomLocation';
 type Props = NativeStackScreenProps<TAppNavigation, 'Location'>;
 const LocationScreen = ({ route, navigation }: Props) => {
   const dispatch = useDispatch();
-  const { brandname, account } = useSelector((state: RootState) => state.app);
+  const { brandname, account, workspace: listWorkspace } = useSelector((state: RootState) => state.app);
   const workspace = route.params?.workspace || '';
   const location = route.params?.location;
   const [curLocation, setCurLocation] = useState<TSearchResult | undefined>(undefined);
@@ -30,6 +30,9 @@ const LocationScreen = ({ route, navigation }: Props) => {
   };
   const onCreateWorkspace = () => {
     const id = uuid();
+    if (listWorkspace.length === 0) {
+      dispatch(updateFirstTimeWorkspace(true));
+    }
     dispatch(
       addWorkspace({
         name: workspace,

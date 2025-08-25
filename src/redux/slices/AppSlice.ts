@@ -38,6 +38,7 @@ export type TState = {
   employees: TEmployee[];
   account: TAccount | null;
   employeeId?: string;
+  isFirstTimeWorkspace: boolean;
 };
 
 const initialState: TState = {
@@ -45,6 +46,7 @@ const initialState: TState = {
   brandname: '',
   workspace: [],
   employees: [],
+  isFirstTimeWorkspace: false,
   employeeId: undefined,
 };
 
@@ -52,6 +54,9 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    updateFirstTimeWorkspace: (state, action: PayloadAction<boolean>) => {
+      state.isFirstTimeWorkspace = action.payload;
+    },
     updateBrandName: (state, action: PayloadAction<string>) => {
       state.brandname = action.payload;
     },
@@ -92,6 +97,7 @@ const appSlice = createSlice({
   },
 });
 export const {
+  updateFirstTimeWorkspace,
   updateBrandName,
   setAccount,
   setWorkspace,
