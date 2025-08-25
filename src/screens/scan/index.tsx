@@ -18,6 +18,7 @@ type Props = NativeStackScreenProps<TAppNavigation, 'ScanScreen'>;
 const ScanScreen = ({ route }: Props) => {
   const [code, setCode] = useState('');
   const insets = useSafeAreaInsets();
+  const [isActive, setIsActive] = useState(false);
   const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
 
@@ -33,7 +34,9 @@ const ScanScreen = ({ route }: Props) => {
       Alert.alert('Camera Permission Denied', 'Please enable camera permission in settings', [
         { text: 'OK', onPress: () => Linking.openSettings() },
       ]);
+      return;
     }
+    setIsActive(true);
   };
   const onVerify = async () => {
     if (!code) {
@@ -122,7 +125,7 @@ const ScanScreen = ({ route }: Props) => {
           codeScanner={codeScanner}
           enableZoomGesture={false}
           device={device}
-          isActive={true}
+          isActive={isActive}
           pointerEvents='auto'
         />
         {code && (

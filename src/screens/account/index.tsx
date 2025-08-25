@@ -157,42 +157,46 @@ const AccountScreen = () => {
     return (
       <AppContainer isScroll={false} style={styles.container_account}>
         <AppHeader title='Account' />
-        <ScrollView contentContainerStyle={styles.body_account}>
-          <View style={styles.gap16}>
-            <Profile name={account.name} email={account.email} avatar={account.url} />
-            <View style={styles.card}>
-              <InfoItem icon={<ICONS.CORE.EMAIL />} label={account.email} isDivider onEdit={() => setOpenedEditAccount(true)} />
-              <InfoItem icon={<ICONS.CORE.PHONE />} label={account.phone} onEdit={() => setOpenedEditAccount(true)} />
+        <View style={styles.body_account}>
+          <ScrollView contentContainerStyle={{ gap: vs(20), paddingHorizontal: s(20), paddingVertical: vs(16) }}>
+            <View style={styles.gap16}>
+              <Profile name={account.name} email={account.email} avatar={account.url} />
+              <View style={styles.card}>
+                <InfoItem icon={<ICONS.CORE.EMAIL />} label={account.email} isDivider onEdit={() => setOpenedEditAccount(true)} />
+                <InfoItem icon={<ICONS.CORE.PHONE />} label={account.phone} onEdit={() => setOpenedEditAccount(true)} />
+              </View>
             </View>
-          </View>
-          <View style={styles.gap12}>
-            <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Workplace</Text>
-            <View style={styles.card}>
-              {workspace?.map((ws, index) => (
-                <WorkspaceItem workspaceId={ws.id} key={ws.id} label={ws.name} isDivider={index !== workspace.length - 1} />
-              ))}
-              <TouchableOpacity style={styles.add_workspace} onPress={onAddNewWorkspace}>
-                <ICONS.CORE.PLUS />
-                <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>New Workplace</Text>
-              </TouchableOpacity>
+            <View style={styles.gap12}>
+              <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Workplace</Text>
+              <View style={styles.card}>
+                {workspace?.map((ws, index) => (
+                  <WorkspaceItem workspaceId={ws.id} key={ws.id} label={ws.name} isDivider={index !== workspace.length - 1} />
+                ))}
+                <TouchableOpacity style={styles.add_workspace} onPress={onAddNewWorkspace}>
+                  <ICONS.CORE.PLUS />
+                  <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>New Workplace</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.gap12}>
-            <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Trash</Text>
-            <View style={styles.card}>
-              {trashEmployees?.map((e, i) => (
-                <TrashItem
-                  key={e.id}
-                  id={e.id}
-                  avatar={''}
-                  email={e.email}
-                  name={e.name}
-                  isDivider={i !== trashEmployees.length - 1}
-                />
-              ))}
+            <View style={styles.gap12}>
+              <Text style={[FONTS.R17, { color: COLORS.blue[2] }]}>Trash</Text>
+              <View style={styles.card}>
+                {trashEmployees?.map((e, i) => (
+                  <TrashItem
+                    key={e.id}
+                    id={e.id}
+                    avatar={''}
+                    email={e.email}
+                    name={e.name}
+                    isDivider={i !== trashEmployees.length - 1}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
-        </ScrollView>
+            <View style={{ height: vs(200) }} />
+          </ScrollView>
+        </View>
+
         <AppButton
           label='Log out'
           onPress={onLogout}
@@ -307,10 +311,8 @@ const styles = StyleSheet.create({
   },
   body_account: {
     flex: 1,
-    paddingHorizontal: s(20),
-    paddingVertical: vs(16),
+
     backgroundColor: COLORS.green[1],
-    gap: vs(20),
   },
   title: {
     color: COLORS.white[1],

@@ -1,6 +1,7 @@
 import AppHeader from '@/components/AppHeader';
 import { useQrCode } from '@/hooks/useQrCode';
 import { navigationRef } from '@/navigation';
+import { RootState } from '@/redux/store';
 import { COLORS } from '@/utils/theme/colors';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
@@ -10,17 +11,23 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Share from 'react-native-share';
+import { useSelector } from 'react-redux';
 
 type Props = NativeStackScreenProps<TAppNavigation, 'InvitationQrCode'>;
 const InvitationQrCodeScreen = ({ route }: Props) => {
   const workspaceId = route.params?.workspaceId || '';
   const employeeId = route.params?.employeeId || '';
+  const { brandname, account } = useSelector((state: RootState) => state.app);
   const qrCode = useQrCode({
     timeout: 1000 * 60 * 60 * 24,
     type: 'invitation',
     workspaceId,
     employeeId,
+    brand: brandname,
+    createdAt: Date.now(),
+    userId: account?.id || '',
   });
   const onGoBack = () => {
     navigationRef.goBack();
@@ -33,7 +40,7 @@ const InvitationQrCodeScreen = ({ route }: Props) => {
     });
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <AppHeader
         leftSection={
           <TouchableOpacity onPress={onGoBack}>
@@ -51,7 +58,7 @@ const InvitationQrCodeScreen = ({ route }: Props) => {
         <QRCode value={qrCode} size={240} />
         <Text style={[FONTS.R17, { color: COLORS.blue[1] }]}>QR code lasts for 24 hours</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -12,14 +12,14 @@ import { ICONS } from '@/utils/theme/icons';
 import { IMAGES } from '@/utils/theme/images';
 import { s, vs } from '@/utils/theme/responsive';
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from './components/Card';
 
 const EmployeeScreen = () => {
   const insets = useSafeAreaInsets();
-  const { brandname, account, workspace } = useSelector((state: RootState) => state.app);
+  const { brandname, account, workspace, employees } = useSelector((state: RootState) => state.app);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const deferredSearch = useDeferredValue(search);
@@ -48,7 +48,7 @@ const EmployeeScreen = () => {
     setIsLoading(false);
   }, [brandname, account?.id, dispatch]);
   const isEmpty = useMemo(() => workspace.length === 0, [workspace]);
-
+  const isEmployeeEmpty = useMemo(() => employees.length === 0, [employees]);
   useEffect(() => {
     onGetListWorkspace();
   }, [onGetListWorkspace]);
@@ -64,12 +64,13 @@ const EmployeeScreen = () => {
               </TouchableOpacity>
             ) : null
           }
+          title={isEmployeeEmpty ? '' : 'Employees'}
         />
         {!isEmpty && (
           <View style={styles.search}>
-            <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>
+            {isEmployeeEmpty && <Text style={[FONTS.B34, { marginBottom: vs(8) }]}>Employees</Text>}
             <AppTextInput
-              containerInputStyle={{ gap: s(8) }}
+              containerInputStyle={{ gap: s(8), paddingVertical: vs(8) }}
               leftSection={<ICONS.CORE.SEARCH />}
               placeholder='Search'
               defaultValue={search}
@@ -80,13 +81,27 @@ const EmployeeScreen = () => {
       </View>
       {!isEmpty && !isLoading && (
         <View style={[styles.body, styles.pt16, { backgroundColor: COLORS.green[1] }]}>
-          {workspace.map((item) => (
-            <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} search={deferredSearch} />
-          ))}
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 20,
+              gap: vs(20),
+            }}>
+            {workspace.map((item) => (
+              <Card key={item.id} workplace={item} onAddEmployee={() => onAddEmployee(item.id)} search={deferredSearch} />
+            ))}
+            <View style={{ height: vs(100) }} />
+          </ScrollView>
         </View>
       )}
       {isEmpty && !isLoading && (
-        <View style={styles.body}>
+        <View
+          style={[
+            styles.body,
+            {
+              paddingHorizontal: 20,
+              gap: vs(20),
+            },
+          ]}>
           <Text style={[FONTS.B34]}>Employees</Text>
           <View style={styles.empty_body}>
             <Image source={IMAGES.ILLUSTARTIONS.WORKSPACE} style={styles.image} />
@@ -114,8 +129,6 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: COLORS.white[1],
-    paddingHorizontal: 20,
-    gap: vs(20),
   },
   image: {
     width: s(320),

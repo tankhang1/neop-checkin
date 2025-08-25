@@ -74,6 +74,7 @@ const CreateWorkplaceScreen = ({ navigation }: Props) => {
             rightSection={<ICONS.CORE.PIN_LOCATION fill={COLORS.blue[5]} />}
             value={getValues('location')?.name}
             onPressIn={() => setOpenAddressSheet(true)}
+            showSoftInputOnFocus={false}
           />
         </TouchableOpacity>
       </View>

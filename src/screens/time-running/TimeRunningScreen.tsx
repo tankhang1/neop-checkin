@@ -15,12 +15,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import Timer from './components/Timmer';
+
 type Props = NativeStackScreenProps<TAppNavigation, 'TimeRunning'>;
 const TimeRunningScreen = ({ route, navigation }: Props) => {
   const employeeId = route.params?.employeeId;
   const workId = route.params?.workId;
+  const [isLoading, setIsLoading] = useState(false);
   const [workspace, setWorkspace] = useState<TWorkspace | null>(null);
   const [employee, setEmployee] = useState<TEmployee | null>(null);
   const [worklist, setWorklist] = useState<TWorklist | null>(null);
@@ -37,18 +40,26 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
   }, [employeeId]);
   const onCheckout = async () => {
     if (workId && employeeId) {
+      setIsLoading(true);
+      await updateEmployeeWorkList(employeeId, workId, { dateOut: new Date() });
       Toast.show({
         type: 'success',
         text1: 'Checkout Successful',
         text2: 'You have successfully checked out',
       });
-      await updateEmployeeWorkList(employeeId, workId, { dateOut: new Date() });
+      setIsLoading(false);
       navigation.pop(2);
     }
   };
   const onWorkList = async () => {
     navigationRef.navigate('EmployeeHistory', {
       employeeId: employeeId!,
+    });
+  };
+  const onLaunchLibrary = () => {
+    launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: 1,
     });
   };
   const onGetWorkList = useCallback(async () => {
@@ -82,7 +93,7 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
               }}
               style={{ width: 120, height: 120, borderRadius: 100 }}
             />
-            <TouchableOpacity style={styles.cameraCont}>
+            <TouchableOpacity style={styles.cameraCont} onPress={onLaunchLibrary}>
               <ICONS.CORE.CAMERA />
             </TouchableOpacity>
           </View>
@@ -130,6 +141,7 @@ const TimeRunningScreen = ({ route, navigation }: Props) => {
               buttonStyle={{ backgroundColor: '#DF6D14' }}
               label='Check Out'
               onPress={onCheckout}
+              loading={isLoading}
             />
           </View>
         </ScrollView>
@@ -150,14 +162,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: vs(12),
     backgroundColor: COLORS.white[1],
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2, // negative height gives shadow above
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 4, // for Android
     zIndex: 10,
   },
   body: {
@@ -181,14 +185,6 @@ const styles = StyleSheet.create({
     height: s(32),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1, // negative height gives shadow above
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 1,
-    elevation: 4, // for Android
   },
   modalCont: {
     backgroundColor: COLORS.white[1],

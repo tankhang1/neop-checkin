@@ -1,8 +1,8 @@
-import { getWorkspacesByBandnameAndUserId } from '@/firebase/workspace.firebase';
 import { TWorkspace } from '@/redux/slices/AppSlice';
+import { RootState } from '@/redux/store';
 import { FONTS } from '@/utils/theme/fonts';
 import { ICONS } from '@/utils/theme/icons';
-import React, { useCallback, useDeferredValue, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   findNodeHandle,
   FlatList,
@@ -17,6 +17,7 @@ import {
 import { Portal } from 'react-native-portalize';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { runOnJS } from 'react-native-worklets';
+import { useSelector } from 'react-redux';
 import AppTextInput, { AppTextInputProps } from '../AppTextInput/AppTextInput';
 
 type TAppDropdown = {
@@ -32,10 +33,8 @@ const AppWorkspaceDropdown = ({ textProps, isClosable, onCallback, accountId, br
   const [selected, setSelected] = useState<TWorkspace | null>(null);
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [search, setSearch] = useState('');
-  const [listWorkspace, setListWorkspace] = useState<TWorkspace[]>([]);
   const inputRef = useRef<View>(null);
-  const deferredSearch = useDeferredValue(search);
-
+  const { workspace } = useSelector((state: RootState) => state.app);
   // Reanimated values
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(-10);
@@ -80,20 +79,13 @@ const AppWorkspaceDropdown = ({ textProps, isClosable, onCallback, accountId, br
     closeDropdown();
     onCallback?.(item);
   };
-  const renderItem = ({ item }: ListRenderItemInfo<TWorkspace>) => {
+  const renderItem = ({ item, index }: ListRenderItemInfo<TWorkspace>) => {
     return (
-      <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
+      <TouchableOpacity key={index} style={styles.item} onPress={() => handleSelect(item)}>
         <Text style={FONTS.M14}>{item.name}</Text>
       </TouchableOpacity>
     );
   };
-  const onGetListWorkspace = useCallback(async () => {
-    const workspaces = await getWorkspacesByBandnameAndUserId(brandname, accountId);
-    setListWorkspace(workspaces as TWorkspace[]);
-  }, [brandname, accountId]);
-  useEffect(() => {
-    onGetListWorkspace();
-  }, [onGetListWorkspace]);
 
   useEffect(() => {
     if (defaultValue) {
@@ -140,7 +132,7 @@ const AppWorkspaceDropdown = ({ textProps, isClosable, onCallback, accountId, br
               },
               animatedStyle,
             ]}>
-            <FlatList data={listWorkspace} keyExtractor={(item) => item.toString()} renderItem={renderItem} />
+            <FlatList data={workspace} keyExtractor={(item) => item.toString()} renderItem={renderItem} />
           </Animated.View>
         </Portal>
       )}
