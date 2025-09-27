@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: s(12),
-    paddingVertical: vs(14),
+    paddingVertical: isIOS ? vs(14) : 0,
     backgroundColor: COLORS.white[1],
 
     // 🔽 shadow for iOS
